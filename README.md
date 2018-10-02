@@ -6,6 +6,11 @@
 # Langage de programmation
 C
 
+# Comment compiler ce projet
+### Sur Linux
+Une fois que tous les fichiers sont présent et rassemblé dans un même dossier, il suffit de faire (pour compiler randomLap par exemple) : gcc randomLap.c -o randomLap
+Pour exécuter le programme fraichement compilé, il suffit de faire (pour lancer randomLap par exemple) : ./randomLap
+
 # Cahier des charges du projet
 ## Projet Système TP Janvier 2019 
 Le but du projet est de gérer un week-end complet d’un grand prix de Formule 1, depuis les séances d’essais du vendredi jusqu’à la course du dimanche, en passant par les essais du samedi et la séance de qualifications. 
