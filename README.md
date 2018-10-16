@@ -7,8 +7,9 @@
 C
 
 # Groupe
-:+1: Numéro : 7
-:+1: Membres (par ordre alphabétique) : Melvin Campos Casares, Maxime De Cock, Dominik Fiedorczuk, Hubert Van De Walle
+:point_right: Numéro : 7
+
+:point_right: Membres (par ordre alphabétique) : Melvin Campos Casares (@melvinmajor), Maxime De Cock (@maxicosi), Dominik Fiedorczuk (@domad007), Hubert Van De Walle (@HE201496)
 
 # Comment compiler ce projet
 ### Sur Linux
@@ -18,7 +19,7 @@ Pour exécuter le programme fraichement compilé, il suffit de faire (pour lance
 ### Sur Windows
 Coming Soon...
 
-#Tâches à faire
+# Tâches à faire
 - [x] Création du GitHub
 - [x] Création d'un randomizer pour générer un temps
 - [ ] Réutilisation du randomizer pour la gestion des secteurs, tours et des crashs
