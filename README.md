@@ -3,8 +3,9 @@
 >
 >-> Last update : September 2018
 
-# Langage de programmation
+# Langage de programmation et licence
 C
+> GNU Lesser General Public License v3.0
 
 # Groupe
 :point_right: Numéro : 7
