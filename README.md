@@ -10,16 +10,21 @@ C
 # Groupe
 :point_right: Numéro : 7
 
-:point_right: Membres (par ordre alphabétique) : Melvin Campos Casares ( @melvinmajor ), Maxime De Cock ( @maxicosi ), Dominik Fiedorczuk ( @domad007 ), Hubert Van De Walle ( @HE201496 )
+:point_right: Membres (par ordre alphabétique) :
+
+- Melvin Campos Casares ( * @melvinmajor * ),
+- Maxime De Cock ( * @maxicosi * ),
+- Dominik Fiedorczuk ( * @domad007 * ),
+- Hubert Van De Walle ( * @HE201496 * ).
 
 # Comment compiler ce projet
 ### Sur Linux
-Une fois que tous les fichiers sont présent et rassemblé dans un même dossier, il suffit de faire (pour compiler randomLap par exemple) : 
+Une fois que tous les fichiers sont présent et rassemblé dans un même dossier, il suffit de lancer : 
 ```
 make
 ```
 
-Pour exécuter le programme fraichement compilé, il suffit de faire (pour lancer randomLap par exemple) :
+Pour exécuter le programme fraichement compilé, il suffit de faire :
 ```
 ./projet
 ```
