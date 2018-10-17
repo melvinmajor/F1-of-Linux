@@ -13,10 +13,10 @@ C
 
 :point_right: Membres (par ordre alphabétique) :
 
-1. Melvin Campos Casares (**@melvinmajor**),
-2. Maxime De Cock (**@maxicosi**),
-3. Dominik Fiedorczuk (**@domad007**),
-4. Hubert Van De Walle (**@HE201496**).
+1. Melvin Campos Casares (_**@melvinmajor**_),
+2. Maxime De Cock (_**@maxicosi**_),
+3. Dominik Fiedorczuk (_**@domad007**_),
+4. Hubert Van De Walle (_**@HE201496**_).
 
 # Comment compiler ce projet
 ### Sur Linux
@@ -36,8 +36,9 @@ Coming Soon...
 # Tâches à faire
 - [x] Création du GitHub
 - [x] Création d'un randomizer pour générer un temps
+- [x] Création d'un affichage temporaire pour tester des parties du code
 - [ ] Réutilisation du randomizer pour la gestion des secteurs, tours et des crashs
-- [ ] Création de l'affichage
+- [ ] Création de l'affichage final
 - [ ] Triage de l'affichage
 - [ ] Création des forks et attribuer à chaque véhicule une structure par défaut
 - [ ] Gestion de la compétition en 3 parties au niveau des séances d'essais libres
@@ -103,9 +104,9 @@ De plus, il vous est demandé de paramétrer votre programme.
 
 En effet, les circuits peuvent être de longueur très variable et, dès lors le nombre de tours pour la course varie également (on essaie que le nombre total de kilomètres soit toujours plus ou moins le même pour chacune des courses du calendrier). 
  
-###### On vous demande : 
-- [x] De réaliser le programme en C sous Linux 
-- [ ] D’utiliser la mémoire partagée comme moyen de communication inter-processus 
-- [ ] D’utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
+###### On vous demande de : 
+- [x] Réaliser le programme en C sous Linux 
+- [ ] Utiliser la mémoire partagée comme moyen de communication inter-processus 
+- [ ] Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
  
 Bon courage.
