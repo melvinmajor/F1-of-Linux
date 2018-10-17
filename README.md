@@ -3,8 +3,9 @@
 >
 >-> Last update : September 2018
 
-# Langage de programmation
+# Langage de programmation et licence
 C
+> GNU Lesser General Public License v3.0
 
 # Groupe
 :point_right: Numéro : 7
@@ -13,8 +14,15 @@ C
 
 # Comment compiler ce projet
 ### Sur Linux
-Une fois que tous les fichiers sont présent et rassemblé dans un même dossier, il suffit de faire (pour compiler randomLap par exemple) : gcc randomLap.c -o randomLap
-Pour exécuter le programme fraichement compilé, il suffit de faire (pour lancer randomLap par exemple) : ./randomLap
+Une fois que tous les fichiers sont présent et rassemblé dans un même dossier, il suffit de faire (pour compiler randomLap par exemple) : 
+```
+make
+```
+
+Pour exécuter le programme fraichement compilé, il suffit de faire (pour lancer randomLap par exemple) :
+```
+./projet
+```
 
 ### Sur Windows
 Coming Soon...

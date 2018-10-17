@@ -5,10 +5,11 @@
 float main(void) {
     int max = 45;
     int min = 30;
+    #define NUM_COUNT (max -min + 1)
 
     srand(time(NULL));
-    float s1 = rand()%(max+1-min)+min; // TODO : "error: invalid operands to binary % (have 'int' and 'float')"
-    printf("%.3f\n", s1);
+    float qualif = min + rand()%NUM_COUNT/100.0;
+    printf("%.3f\n", qualif);
 
     return 0;
 }
