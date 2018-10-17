@@ -41,9 +41,13 @@ int main(int argc, char *argv[]) {
   max.milliseconds = 0;
 
   int times[TABLE_SIZE];
+  int minimum = toMs(&min);
+  int maximum = toMs(&max);
 
   for (int i = 0; i < TABLE_SIZE; i++) {
-    printf("name: %d, time: %d\n", f1[i], my_rand(toMs(&min), toMs(&max)));
+    int ra = my_rand(minimum, maximum);
+    struct TimeUnit timeUnit = toTimeUnit(ra);
+    printf("name: %d, min: %d, sec: %d, ms: %d\n", f1[i], timeUnit.minutes, timeUnit.seconds, timeUnit.milliseconds);
   }
 
   exit(0);
