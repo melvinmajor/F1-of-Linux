@@ -12,10 +12,10 @@ C
 
 :point_right: Membres (par ordre alphabétique) :
 
-- Melvin Campos Casares ( * @melvinmajor * ),
-- Maxime De Cock ( * @maxicosi * ),
-- Dominik Fiedorczuk ( * @domad007 * ),
-- Hubert Van De Walle ( * @HE201496 * ).
+- Melvin Campos Casares (*@melvinmajor*),
+- Maxime De Cock (*@maxicosi*),
+- Dominik Fiedorczuk (*@domad007*),
+- Hubert Van De Walle (*@HE201496*).
 
 # Comment compiler ce projet
 ### Sur Linux
