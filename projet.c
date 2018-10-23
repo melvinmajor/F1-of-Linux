@@ -11,6 +11,7 @@ struct TimeUnit {
     int milliseconds;
 };
 
+//FIXME
 struct TimeUnit toTimeUnit(int ms) {
     struct TimeUnit timeUnit;
     timeUnit.seconds = ms / 1000;
@@ -45,7 +46,8 @@ int main(int argc, char *argv[]) {
     int minimum = toMs(&min);
     int maximum = toMs(&max);
 
-    for (int i = 0; i < TABLE_SIZE; i++) {
+    int i = 0;
+    for (; i < TABLE_SIZE; i++) {
         int ra = my_rand(minimum, maximum);
         struct TimeUnit timeUnit = toTimeUnit(ra);
         printf("name: %d, min: %d, sec: %d, ms: %d\n", f1[i], timeUnit.minutes, timeUnit.seconds,
