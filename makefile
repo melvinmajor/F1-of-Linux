@@ -1,12 +1,12 @@
-CC=gcc
-SRC=projet.c
-OUT=projet
+SRC_DIR=src
+SRC = $(wildcard $(SRC_DIR)/*.c)
+EXE=out/projet
 
-make:
-	$(CC) $(SRC) -o $(OUT)
+all:
+	$(CC) $(SRC) -o $(EXE)
 
 format:
 	clang-format -i -style="{IndentWidth: 4, ColumnLimit: 120}" $(SRC)
 
 clean:
-	rm $(OUT)
+	rm $(EXE)
