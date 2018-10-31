@@ -1,44 +1,72 @@
+#include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "car.h"
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include "random.h"
-#include "timeUnit.h"
 
-#define TABLE_SIZE 20
+#define CAR_COUNT 20
 
-int f1[TABLE_SIZE] = {44, 77, 5, 7, 3, 33, 11, 31, 18, 35, 27, 55, 10, 28, 8, 20, 2, 14, 9, 16};
+int f1[CAR_COUNT] = {44, 77, 5, 7, 3, 33, 11, 31, 18, 35, 27, 55, 10, 28, 8, 20, 2, 14, 9, 16};
 
-int comp(const void *elem1, const void *elem2) {
-    struct Car *a = (struct Car *)elem1;
-    struct Car *b = (struct Car *)elem2;
-    return a->ms - b->ms;
+void *create_shared_memory(size_t size) {
+    int prot = PROT_READ | PROT_WRITE;
+    int flags = MAP_ANONYMOUS | MAP_SHARED;
+    return mmap(NULL, size, prot, flags, 0, 0);
 }
 
-int main(int argc, char *argv[]) {
-    struct TimeUnit min = new_time_unit(0, 30, 0);
-    struct TimeUnit max = new_time_unit(0, 45, 0);
+int main(void) {
+    int i, n;
 
-    int minimum = to_ms(min);
-    int maximum = to_ms(max);
+    sem_t *sem;
+    sem = (sem_t *)create_shared_memory(sizeof(sem));
+    sem_init(sem, 1, 0);
 
-    struct Car cars[TABLE_SIZE];
+    pid_t pid;
+    int car_index;
 
-    int i = 0;
-    init_rand();
-    for (; i < TABLE_SIZE; i++) {
-        int ra = bounded_rand(minimum, maximum);
-        struct Car car;
-        car.name = f1[i];
-        car.ms = ra;
-        cars[i] = car;
+    for (i = 0, n = CAR_COUNT; i < n; i++) {
+        car_index = i;
+        pid = fork();
+        if (pid == 0) {
+            break;
+        }
     }
 
-    qsort(cars, TABLE_SIZE, sizeof(*cars), comp);
+    if (pid < 0) {
+        fprintf(stderr, "An error occured while forking: %d\n", pid);
+    } else if (pid == 0) {
+        sem_wait(sem);
+        sem_post(sem);
+        // start
+        srand(getpid());
+        printf("Starting race\n");
+        int total_time = 0;
+        int max = 3600000;
+        int lap = 0;
+        while (total_time < max) {
+            for (i = 0; i < 3; i++) {
+                int base_time = 40000;
+                int deviation = 1000;
+                int random_sector = bounded_rand(base_time - deviation, base_time + deviation);
+                total_time += random_sector;
+                printf("[%d] lap: %d, sector: %d, time: %d\n", car_index, lap, i, random_sector);
+            }
+            lap++;
+        }
 
-    for (i = 0; i < TABLE_SIZE; i++) {
-        struct TimeUnit time = to_time_unit(cars[i].ms);
-        printf("car %-2d : %d''%02d'%03d\n", cars[i].name, time.m, time.s, time.ms);
+        printf("Race done\n");
+    } else {
+        sem_post(sem);
+
+        //TODO display here
+
+        // wait for children to exit
+        for (i = 0; i < CAR_COUNT; i++) {
+            wait(NULL);
+        }
     }
-
     exit(0);
 }
