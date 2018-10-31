@@ -11,7 +11,7 @@ C
 
 :point_right: Numéro : 7
 
-:point_right: Membres (par ordre alphabétique) :
+:point_right: Membres :
 
 1. Melvin Campos Casares (_**@melvinmajor**_),
 2. Maxime De Cock (_**@maxicosi**_),
@@ -27,11 +27,8 @@ make
 
 Pour exécuter le programme fraichement compilé, il suffit de faire :
 ```
-./projet
+out/projet
 ```
-
-### Sur Windows
-Coming Soon...
 
 # Tâches à faire
 - [x] Création du GitHub
