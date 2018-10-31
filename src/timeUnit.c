@@ -1,7 +1,15 @@
 #include "timeUnit.h"
 #include <stdlib.h>
 
-struct TimeUnit toTimeUnit(int ms) {
+struct TimeUnit new_time_unit(int min, int sec, int ms) {
+    struct TimeUnit t;
+    t.m = min;
+    t.s = sec;
+    t.ms = ms;
+    return t;
+}
+
+struct TimeUnit to_time_unit(int ms) {
     struct TimeUnit timeUnit;
     div_t output;
 
@@ -18,7 +26,7 @@ struct TimeUnit toTimeUnit(int ms) {
     return timeUnit;
 }
 
-int toMs(struct TimeUnit timeUnit) {
+int to_ms(struct TimeUnit timeUnit) {
     int ms = 0;
     ms += timeUnit.ms;
     ms += timeUnit.s * 1000;

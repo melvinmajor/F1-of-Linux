@@ -1,8 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "car.h"
 #include "random.h"
 #include "timeUnit.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 #define TABLE_SIZE 20
 
@@ -15,18 +15,11 @@ int comp(const void *elem1, const void *elem2) {
 }
 
 int main(int argc, char *argv[]) {
-    struct TimeUnit min;
-    min.m = 0;
-    min.s = 30;
-    min.ms = 0;
+    struct TimeUnit min = new_time_unit(0, 30, 0);
+    struct TimeUnit max = new_time_unit(0, 45, 0);
 
-    struct TimeUnit max;
-    max.m = 0;
-    max.s = 45;
-    max.ms = 0;
-
-    int minimum = toMs(min);
-    int maximum = toMs(max);
+    int minimum = to_ms(min);
+    int maximum = to_ms(max);
 
     struct Car cars[TABLE_SIZE];
 
@@ -40,11 +33,11 @@ int main(int argc, char *argv[]) {
         cars[i] = car;
     }
 
-    qsort(cars, sizeof(cars) / sizeof(*cars), sizeof(*cars), comp);
+    qsort(cars, TABLE_SIZE, sizeof(*cars), comp);
 
     for (i = 0; i < TABLE_SIZE; i++) {
-        struct TimeUnit time = toTimeUnit(cars[i].ms);
-        printf("car %-3d: %d''%d'%d\n", cars[i].name, time.m, time.s, time.ms);
+        struct TimeUnit time = to_time_unit(cars[i].ms);
+        printf("car %-2d : %d''%02d'%03d\n", cars[i].name, time.m, time.s, time.ms);
     }
 
     exit(0);
