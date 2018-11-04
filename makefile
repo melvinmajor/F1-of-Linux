@@ -1,9 +1,10 @@
 SRC_DIR=src
-SRC = $(wildcard $(SRC_DIR)/*.c)
+SRC=$(wildcard $(SRC_DIR)/*.c)
+CFLAGS=-Wall -Wextra -lpthread -lrt
 EXE=out/projet
 
-all:
-	$(CC) $(SRC) -o $(EXE)
+compile:
+	$(CC) $(SRC) $(CFLAGS) -o $(EXE)
 
 format:
 	clang-format -i -style="{IndentWidth: 4, ColumnLimit: 120}" $(SRC)
