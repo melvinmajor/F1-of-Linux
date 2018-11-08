@@ -1,9 +1,10 @@
 SRC_DIR=src
 SRC=$(wildcard $(SRC_DIR)/*.c)
-CFLAGS=-Wall -Wextra -lpthread -lrt
+CFLAGS=-Wall -Wextra -lpthread -lrt -std=gnu99
 EXE=out/projet
 
 compile:
+	mkdir -p out
 	$(CC) $(SRC) $(CFLAGS) -o $(EXE)
 
 format:

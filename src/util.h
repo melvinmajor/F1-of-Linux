@@ -1,3 +1,7 @@
+#include <time.h>
+#include <sys/types.h>
+#include <semaphore.h>
+
 void sleep_ms(int ms);
 
 void *create_shared_memory(size_t size);
