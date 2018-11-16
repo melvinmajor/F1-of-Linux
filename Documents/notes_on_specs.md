@@ -50,7 +50,7 @@ Dans le cas de OUT, la voiture est dernière du classement.
 |----------------------|---------------------|
 
 ##### Qualification :
-###### Tir temps meilleur tour
+###### Tri temps meilleur tour
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps tour | Temps meilleur tour |
 |----------------------|----|----|----|------------|---------------------|
