@@ -1,7 +1,6 @@
 >## F1-of-Linux
 >1st project of the academic year for the lesson of OS 2nd Bachelor at EPHEC Louvain-la-Neuve
 >
->-> Last update : September 2018
 
 # Langage de programmation et licence
 C
