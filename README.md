@@ -36,7 +36,7 @@ out/projet
 - [ ] Réutilisation du randomizer pour la gestion des secteurs, tours et des crashs
 - [ ] Création de l'affichage final
 - [ ] Triage de l'affichage
-- [ ] Création des forks et attribuer à chaque véhicule une structure par défaut
+- [x] Création des forks et attribuer à chaque véhicule une structure par défaut
 - [ ] Gestion de la compétition en 3 parties au niveau des séances d'essais libres
 - [ ] Gestion de la compétition en 3 parties au niveau des qualifications
 - [ ] Gestion de la compétition lors de la course, du grand prix
@@ -64,10 +64,10 @@ Votre projet devra prendre en charge les choses suivantes.
 
 ### Première partie : gestion des séances d’essai, des qualifications et de la course 
 ###### Lors des séances d’essais (P1, P2, P3) : 
-- [ ] Relever les temps dans les 3 secteurs à chaque passage pour chaque voiture 
+- [x] Relever les temps dans les 3 secteurs à chaque passage pour chaque voiture 
 - [ ] Toujours savoir qui a le meilleur temps dans chacun des secteurs 
 - [ ] Classer les voitures en fonction de leur tour complet le plus rapide 
-- [ ] Savoir si une voiture est aux stands (P) 
+- [x] Savoir si une voiture est aux stands (P) 
 - [ ] Savoir si une voiture est out (abandon de la séance) 
 - [ ] Dans ces 2 derniers cas, on conserve toujours le meilleur temps de la voiture et celle-ci reste dans le classement 
 - [ ] Conserver le classement final à la fin de la séance
@@ -102,7 +102,7 @@ En effet, les circuits peuvent être de longueur très variable et, dès lors le
  
 ###### On vous demande de : 
 - [x] Réaliser le programme en C sous Linux 
-- [ ] Utiliser la mémoire partagée comme moyen de communication inter-processus 
-- [ ] Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
+- [x] Utiliser la mémoire partagée comme moyen de communication inter-processus 
+- [x] Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
  
 Bon courage.

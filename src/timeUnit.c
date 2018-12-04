@@ -1,4 +1,5 @@
 #include "timeUnit.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 struct TimeUnit to_time_unit(int ms) {
@@ -24,4 +25,9 @@ int to_ms(struct TimeUnit timeUnit) {
     ms += timeUnit.s * 1000;
     ms += timeUnit.m * 60 * 1000;
     return ms;
+}
+
+void to_string(int ms, char *str) {
+    struct TimeUnit time = to_time_unit(ms);
+    sprintf(str, "%d'%d", time.s, time.ms);
 }

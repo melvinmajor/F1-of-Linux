@@ -46,17 +46,29 @@ Dans le cas de OUT, la voiture est dernière du classement.
 ##### Essai libre :
 ###### Tri temps meilleur tour
 
-| Numéro de la voiture | Temps meilleur tour |
-|----------------------|---------------------|
+| Numéro de la voiture | S1 | S2 | S3 | Temps meilleur tour |
+|----------------------|----|----|----|---------------------|
+| 2                    | 35 | 39 | 38 | 1min 52s            |
+| 55                   | 40 | 36 | 39 | 1min 55s            |
+| 14                   | 39 | 40 | 37 | 1min 56s            |
+| 28                   | 37 | 40 | 39 | 1min 56s            |
 
 ##### Qualification :
 ###### Tri temps meilleur tour
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps tour | Temps meilleur tour |
 |----------------------|----|----|----|------------|---------------------|
+| 14                   | 39 | 40 | 37 | 1min 56s   | 1min 32s            |
+| 2                    | 35 | 39 | 38 | 1min 52s   | 1min 47s            |
+| 55                   | 40 | 36 | 39 | 1min 55s   | 1min 55s            |
+| 28                   | 39 | 40 | 37 | 1min 56s   | 1min 39s            |
 
 ##### Course :
 ###### Tri position dans la course
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps tour | Lap |
 |----------------------|----|----|----|------------|-----|
+| 2                    | 35 | 39 | 38 | 1min 52s   | 14  |
+| 55                   | 40 | 36 | 39 | 1min 55s   | 14  |
+| 14                   | 39 | 40 | 37 | 1min 56s   | 14  |
+| 28                   | 39 | 40 | 37 | 1min 56s   | 14  |

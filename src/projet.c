@@ -1,3 +1,9 @@
+#include "display.h"
+#include "lapInfo.h"
+#include "random.h"
+#include "sort.h"
+#include "timeUnit.h"
+#include "util.h"
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,104 +12,103 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-#include "random.h"
-#include "timeUnit.h"
-#include "util.h"
 
 #define CAR_COUNT 20
 
-char *f1[CAR_COUNT] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
-                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
+#define SLEEP_BTW_LAP 10
 
-struct LapInfo {
-    // how many lines ??
-    int time[1500][3];
-    int current_lap;
-    int current_sector;
-    int in_stand;
-    int abandon;
-    int race_done;
-};
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define BLU "\x1B[34m"
+#define MAG "\x1B[35m"
+#define CYN "\x1B[36m"
+#define WHT "\x1B[37m"
+#define RST "\x1B[0m"
 
-void to_string(int ms, char *str) {
-    struct TimeUnit time = to_time_unit(ms);
-    sprintf(str, "%d'%d", time.s, time.ms);
-}
+char *CAR_NAMES[CAR_COUNT] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
+                              "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
 
-void child(sem_t *sem, struct LapInfo *lap_info) {
-    sem_wait(sem);
-    sem_post(sem);
-
+void child(sem_t *sem, sem_t *sem2, struct LapInfo *lap_info) {
     srand(getpid());
 
     int i, lap;
-    int total_time = 0;
+    int total_time;
 
     int max_time = to_ms((struct TimeUnit){.m = 90, .s = 0, .ms = 0});
     int base_time = to_ms((struct TimeUnit){.m = 0, .s = 40, .ms = 0});
     int deviation = to_ms((struct TimeUnit){.m = 0, .s = 5, .ms = 0});
 
-    for (lap = 0; total_time < max_time; lap++) {
-        lap_info->current_lap = lap;
-        for (i = 0; i < 3; i++) {
-            lap_info->current_sector = i;
-            int random_sector = bounded_rand(base_time - deviation, base_time + deviation);
-            lap_info->time[lap][i] = random_sector;
-            total_time += random_sector;
+    for (int seance = 0; seance < 3; seance++) {
+        sem_wait(sem);
+        total_time = 0;
+        if (seance == 3)
+            max_time = to_ms((struct TimeUnit){.m = 60, .s = 0, .ms = 0});
+        for (lap = 0; total_time < max_time; lap++) {
+
+            sem_post(sem2);
+            sem_wait(sem);
+
+            lap_info->current_lap = lap;
+
+            if (lap_info->best_time != 0 || lap_info->best_time > lap) {
+
+                lap_info->best_time = lap;
+            }
+
+            for (i = 0; i < 3; i++) {
+                lap_info->current_sector = i;
+                int random_sector = bounded_rand(base_time - deviation, base_time + deviation + 1);
+                lap_info->current_time[i] = random_sector;
+                total_time += random_sector;
+            }
+
+            sleep_ms(SLEEP_BTW_LAP);
         }
 
-        sleep_ms(100);
+        lap_info->race_done = 1;
+        sem_post(sem2);
     }
-    lap_info->race_done = 1;
 }
 
-int done(const struct LapInfo *lap_infos) {
-    int i;
-    for (i = 0; i < CAR_COUNT; i++)
-        if (lap_infos[i].race_done) return 1;
-    return 0;
-}
+void display(sem_t *sem, sem_t *sem2, struct LapInfo *lap_infos) {
+    /*------
+    Practice
+    --------*/
+    for (int i = 1; i <= 3; i++) {
+        reset(lap_infos, CAR_COUNT);
+        printf("%s%d\n", "START practice", i);
+        signal_n_times(sem, cars_still_racing(lap_infos, CAR_COUNT));
 
-int started(const struct LapInfo *lap_infos) {
-    int i;
-    for (i = 0; i < CAR_COUNT; i++)
-        if (lap_infos[i].current_lap < 2) return 0;
-    return 1;
-}
+        for (int i = 0; !done(lap_infos, CAR_COUNT); i++) {
+            wait_n_times(sem2, cars_still_racing(lap_infos, CAR_COUNT));
 
-void display(sem_t *sem, struct LapInfo *lap_infos) {
-    sem_post(sem);
+            if (i % 5 == 0) {
+                struct LapInfo *sorted = sort_by_time(lap_infos, CAR_COUNT);
 
-    int s = 0;
-    while (!done(lap_infos)) {
-        sleep_ms(500);
+                print_practice(sorted, CAR_COUNT);
+                printf("%d\n", cars_still_racing(lap_infos, CAR_COUNT));
+            }
 
-        if (!s && !started(lap_infos))
-            continue;
-        else
-            s = 1;
+            
 
-        printf("\n%4s|%-6s|%-6s|%-6s\n", "NAME", "S1", "S2", "S3");
-        printf("----|------|------|------\n");
-        for (int i = 0; i < CAR_COUNT; i++) {
-            int previous_lap = lap_infos[i].current_lap - 1;
-
-            char a[7];
-            to_string(lap_infos[i].time[previous_lap][0], a);
-
-            char b[7];
-            to_string(lap_infos[i].time[previous_lap][1], b);
-
-            char c[7];
-            to_string(lap_infos[i].time[previous_lap][2], c);
-
-            printf("%4s|%-6s|%-6s|%-6s  lap:%d\n", f1[i], a, b, c, previous_lap);
+            signal_n_times(sem, cars_still_racing(lap_infos, CAR_COUNT));
         }
+
+        printf("%s%d\n\n", "END practice", i);
+        sleep_ms(750);
     }
+
+    /*----
+    Qualif
+    ------*/
+    reset(lap_infos, CAR_COUNT);
+    // TODO
 }
 
 int main(void) {
     sem_t *sem = init_shared_sem(0);
+    sem_t *sem2 = init_shared_sem(0);
 
     size_t lap_infos_size = sizeof(struct LapInfo) * CAR_COUNT;
     struct LapInfo *lap_infos_shared = (struct LapInfo *)create_shared_memory(lap_infos_size);
@@ -113,6 +118,7 @@ int main(void) {
         struct LapInfo inf;
         inf.race_done = 0;
         lap_infos_shared[i] = inf;
+        inf.car_name = CAR_NAMES[i];
     }
 
     pid_t pid;
@@ -121,20 +127,22 @@ int main(void) {
     for (i = 0; i < CAR_COUNT; i++) {
         car_index = i;
         pid = fork();
-        if (pid == 0) break;
+        if (pid == 0)
+            break;
     }
 
     if (pid < 0) {
         fprintf(stderr, "An error occured while forking: %d\n", pid);
         exit(1);
     } else if (pid == 0) {
-        child(sem, &lap_infos_shared[car_index]);
+        child(sem, sem2, &lap_infos_shared[car_index]);
         exit(0);
     } else {
-        display(sem, lap_infos_shared);
+        display(sem, sem2, lap_infos_shared);
     }
 
-    for (i = 0; i < CAR_COUNT; i++) wait(NULL);
+    for (i = 0; i < CAR_COUNT; i++)
+        wait(NULL);
 
     exit(0);
 }
