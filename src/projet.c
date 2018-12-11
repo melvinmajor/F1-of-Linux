@@ -90,8 +90,6 @@ void display(sem_t *sem, sem_t *sem2, struct LapInfo *lap_infos) {
                 printf("%d\n", cars_still_racing(lap_infos, CAR_COUNT));
             }
 
-            
-
             signal_n_times(sem, cars_still_racing(lap_infos, CAR_COUNT));
         }
 

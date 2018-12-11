@@ -1,4 +1,6 @@
-void print_practice(unsigned int best_times[], int car_number, char *names[]);
+#include "lapInfo.h"
+
+void print_practice(struct LapInfo *lap_infos, int count);
 
 void print_qualif();
 
