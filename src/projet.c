@@ -125,18 +125,17 @@ int main(void) {
     for (i = 0; i < CAR_COUNT; i++) {
         car_index = i;
         pid = fork();
-        if (pid == 0)
-            break;
-    }
-
-    if (pid < 0) {
-        fprintf(stderr, "An error occured while forking: %d\n", pid);
-        exit(1);
-    } else if (pid == 0) {
-        child(sem, sem2, &lap_infos_shared[car_index]);
-        exit(0);
-    } else {
-        display(sem, sem2, lap_infos_shared);
+        if (pid < 0){
+	    printf(stderr, "An error occured while forking : %d", pid);
+	    exit (1);
+	}
+	else if (pid == 0){
+            child(sem, sem2, &lap_infos_shared[car_index]);
+	    exit(0);
+	}
+	else {
+	    display(sem, sem2, lap_infos_shared);
+	}
     }
 
     for (i = 0; i < CAR_COUNT; i++)
