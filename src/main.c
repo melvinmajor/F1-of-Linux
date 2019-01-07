@@ -1,16 +1,15 @@
+#include "car.h"
+#include "carstruct.h"
+#include "display.h"
+#include "options.h"
+#include "sharedstruct.h"
+#include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "display.h"
-#include "car.h"
-#include "carstruct.h"
-#include <semaphore.h>
-#include "options.h"
-#include "sharedstruct.h"
-#include <stdlib.h>
 
 // utility function returning a pointer from shared memory
 void *create_shared_memory(size_t size) {
@@ -26,14 +25,14 @@ void *create_shared_memory(size_t size) {
 
 // utility function returning a pointer to a semaphore in shared memory
 sem_t *init_shared_sem(unsigned int init_value) {
-    sem_t *sem = (sem_t *) create_shared_memory(sizeof(sem_t));
+    sem_t *sem = (sem_t *)create_shared_memory(sizeof(sem_t));
     sem_init(sem, 1, init_value);
     return sem;
 }
 
 int main() {
-    char *ALL_CAR_NAMES[20] = {"44", "77", "5", "7", "3", "33", "11", "31", "18", "35",
-                               "27", "55", "10", "28", "8", "20", "2", "14", "9", "16"};
+    char *ALL_CAR_NAMES[20] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
+                               "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
 
     // only used for debugging
     if (NUMBER_OF_CARS != 20) {
@@ -49,9 +48,8 @@ int main() {
     pid_t pid = 0;
     int car_index = 0;
 
-
     size_t shared_struct_size = sizeof(SharedStruct);
-    SharedStruct *shared_struct = (SharedStruct *) create_shared_memory(shared_struct_size);
+    SharedStruct *shared_struct = (SharedStruct *)create_shared_memory(shared_struct_size);
 
     sem_t *sem = init_shared_sem(0);
 
@@ -62,13 +60,7 @@ int main() {
         shared_struct->car_structs[i].name = CAR_NAMES[i];
 
         for (int j = 0; j < 7; ++j) {
-            RaceStep race_step = {
-                    .lap = 0,
-                    .stand = 0,
-                    .withdrawal = 0,
-                    .done = 0,
-                    .allowed = 0
-            };
+            RaceStep race_step = {.lap = 0, .stand = 0, .withdrawal = 0, .done = 0, .allowed = 0};
             shared_struct->car_structs[i].race_steps[j] = race_step;
         }
     }
@@ -76,7 +68,8 @@ int main() {
     for (int i = 0; i < NUMBER_OF_CARS; i++) {
         car_index = i;
         pid = fork();
-        if (pid == 0) break;
+        if (pid == 0)
+            break;
     }
 
     if (pid < 0) {
@@ -87,10 +80,10 @@ int main() {
         exit(0);
     } else {
         display(shared_struct);
-        for (int i = 0; i < NUMBER_OF_CARS; ++i) wait(NULL);
+        for (int i = 0; i < NUMBER_OF_CARS; ++i)
+            wait(NULL);
         munmap(shared_struct, shared_struct_size);
         munmap(sem, sizeof(sem_t));
         exit(0);
     }
-
 }

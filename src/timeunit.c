@@ -19,9 +19,7 @@ TimeUnit to_time_unit(int ms) {
     return timeUnit;
 }
 
-TimeUnit minutes(int minutes) {
-    return (TimeUnit) {.m=minutes, .s = 0, .ms = 0};
-}
+TimeUnit minutes(int minutes) { return (TimeUnit){.m = minutes, .s = 0, .ms = 0}; }
 
 int to_ms(TimeUnit timeUnit) {
     int ms = 0;

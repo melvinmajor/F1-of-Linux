@@ -1,15 +1,19 @@
 #include "util.h"
-#include <stdlib.h>
 #include "options.h"
+#include <stdlib.h>
 
 int comp(const void *a, const void *b) {
-    int first = ((struct e *) a)->value;
-    int second = ((struct e *) b)->value;
+    int first = ((struct e *)a)->value;
+    int second = ((struct e *)b)->value;
 
-    if (first == second) return 0;
-    else if (first == -1) return -1;
-    else if (second == -1) return 1;
-    else return first - second;
+    if (first == second)
+        return 0;
+    else if (first == -1)
+        return -1;
+    else if (second == -1)
+        return 1;
+    else
+        return first - second;
 }
 
 void sort_car_by_time(struct e *result, Car *car, int step) {
@@ -17,10 +21,7 @@ void sort_car_by_time(struct e *result, Car *car, int step) {
         Car *c = &car[i];
         RaceStep *race_step = &c->race_steps[step];
         if (!race_step->allowed) {
-            result[i] = (struct e) {
-                    .car_index = i,
-                    .value = -1
-            };
+            result[i] = (struct e){.car_index = i, .value = -1};
             continue;
         }
 
@@ -33,11 +34,7 @@ void sort_car_by_time(struct e *result, Car *car, int step) {
             laps[j] += race_step->time[lap_count][2];
         }
 
-        result[i] = (struct e) {
-                .car_index = i,
-                .value = min_from_array(laps, lap_count)
-        };
-
+        result[i] = (struct e){.car_index = i, .value = min_from_array(laps, lap_count)};
     }
 
     qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
@@ -48,19 +45,13 @@ void sort_car_by_lap(struct e *result, Car *car, int step) {
         Car *c = &car[i];
         RaceStep *race_step = &c->race_steps[step];
         if (!race_step->allowed) {
-            result[i] = (struct e) {
-                    .car_index = i,
-                    .value = -1
-            };
+            result[i] = (struct e){.car_index = i, .value = -1};
             continue;
         }
 
         int lap_count = race_step->lap;
 
-        result[i] = (struct e) {
-                .car_index = i,
-                .value = lap_count
-        };
+        result[i] = (struct e){.car_index = i, .value = lap_count};
     }
 
     qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);

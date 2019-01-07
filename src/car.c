@@ -1,20 +1,20 @@
 #include "car.h"
-#include <stdio.h>
-#include <unistd.h>
 #include "random.h"
-#include <time.h>
 #include "step.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 // #define DEBUG
 
 #ifdef DEBUG
 #define DIVIDER 100000
-#endif //DEBUG
+#endif // DEBUG
 
 #ifndef DEBUG
 #define DIVIDER 1000
-#endif //DEBUG
+#endif // DEBUG
 
 // the average time of a sector
 int average_time;
@@ -29,7 +29,7 @@ void sleep_ms(int ms) {
 
 // function called after the fork, once for each car
 void car(SharedStruct *shared_struct, int index) {
-    init_rand((unsigned int) getpid());
+    init_rand((unsigned int)getpid());
 
     average_time = 40000;
     variance = average_time * 10 / 100;
@@ -42,7 +42,6 @@ void car(SharedStruct *shared_struct, int index) {
     step(shared_struct, index, Q2, minutes(15), 0);
     step(shared_struct, index, Q3, minutes(12), 0);
 
-    
     // TODO
     int lap_number = 15;
     step(shared_struct, index, RACE, minutes(90), lap_number);
@@ -75,7 +74,8 @@ void generate_lap(RaceStep *race_step, int lap) {
 
 // function called once for each step of the formula 1 weekend
 void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
-    while (shared_struct->step != step_index);
+    while (shared_struct->step != step_index)
+        ;
     sem_wait(shared_struct->sem);
 
     Car *car = &shared_struct->car_structs[car_index];
@@ -94,7 +94,8 @@ void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit m
     while (1) {
         generate_lap(race_step, lap);
 
-        if (race_step->withdrawal) break;
+        if (race_step->withdrawal)
+            break;
 
         int sum = 0;
         sum += race_step->time[lap][0];
@@ -107,9 +108,7 @@ void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit m
             current_time += sum;
             race_step->lap = lap++;
         }
-
     }
-
 
     race_step->done = 1;
 }
