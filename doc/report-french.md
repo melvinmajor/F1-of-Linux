@@ -24,8 +24,10 @@ Notre groupe est constitué de 4 personnes :
 
 - Hubert Van De Walle
 
-Introduction du projet
-----------------------
+\pagebreak
+
+Introduction et présentation du projet
+--------------------------------------
 
 Ce projet consiste à présenter un week-end complet d'un grand prix de Formule 1
 , depuis les séances d'essais du vendredi jusqu'à la course du dimanche, en 
@@ -45,6 +47,8 @@ d'un nouveau processus utilisateur), sémaphores (pour gérer la synchronisation
 de la mémoire ainsi que réduire l'accès aux routes partagées) et la mémoire 
 partagée (allocation et utilisation par appel des mémoires partagées via leurs 
 identificateurs).
+
+\pagebreak
 
 Cahier des charges
 ------------------
@@ -162,8 +166,37 @@ calendrier).
 
 - Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
 
-Difficultés rencontrées
------------------------
+\pagebreak
+
+Analyse du travail
+------------------
+
+Nous nous sommes réparti les taches de la manière suivante :
+
+- Utilisation d'un système de controle de versions, nous permettant 
+d'effectuer des changements chacun de notre coté (Git),
+
+- Creation d'un makefile afin de faciliter la compilation du projet,
+
+- Melvin a mis au clair le cahier des charges afin que nous comprenions tous 
+un peu mieux les attentes pour ce projet,
+
+- Dominik et Maxime ont implémenté une fonction permettant la génération du 
+random, utilisée dans la génération du temps des secteurs ainsi que pour 
+certaines probabilitées,
+
+- Hubert a pris en charge le coté programmation lorsque les autres membres du 
+groupe ne voyaient pas comment implémenter correctement les demandes du cahier 
+des charges,
+
+- Melvin et Dominik ont tenté de débugguer le projet lors du problème SIGSEGV,
+
+- ...
+
+\pagebreak
+
+Difficultés rencontrées et solutions
+------------------------------------
 
 ### Compréhension du cahier des charges
 
@@ -173,6 +206,8 @@ plus concrètement comment mettre en oeuvre certaines implémentations demandée
 du temps consacré spécifiquement au projet en cours, nous avons su comment 
 avancer dans le projet de façon plus claire et concise malgré l'impact non 
 négligeable sur la gestion du temps.
+
+\pagebreak
 
 ### Random
 
@@ -210,12 +245,86 @@ mémoire partagée suite à l'utilisation du malloc.
 En effet, malloc était trop petit, impliquant de fait le problème rencontré 
 avec la mémoire partagée.
 
-Pistes d'amélioration éventuelles
---------------------------------
+### Synchronisation
 
-```C
-//TODO
-```
+Nous avons rencontré un problème de synchronisation entre les sémaphores 
+utilisé dans le projet. 
+En effet, nous n'utilisions pas correctement les fonctions wait et signal des 
+sémaphores, impliquant par conséquent la nécessité de débugguer le projet 
+afin de détecter précisément les zones posant problème et de pouvoir les 
+corriger. 
+
+### Deadlock
+
+Le problème de deadlock rencontré provenait des processus fils, plus 
+précisément lors de la synchronisation de ces derniers. 
+En débugguant le projet, nous l'avons fixé. 
+
+### Allocation mémoire dynamique
+
+En utilisant une longueur variable pour le circuit, le nombre de tours varie 
+et il faut donc allouer les tableaux contenant la durée des différents secteurs
+ de manière dynamique. 
+Par manque de temps, nous l'avons pas implémenté. 
+
+\pagebreak
+
+Evolutions futures
+------------------
+
+### Un meilleur affichage
+
+L'affichage actuellement présent dans le projet n'est pas exactement celui 
+demandé d'après le cahier des charges. 
+Une réimplémentation de l'affichage pour contenir toutes les informations 
+demandées avec, éventuellement, un jeu de couleurs pourrait s'avérer 
+intéressant. 
+
+Par exemple, nous pourrions implémenter un affichage ressemblant à ceci : 
+
+Afficher en Temps tour si P (P se trouve en S3) ou OUT (si abandon ou crash). 
+Dans le cas de OUT, la voiture est dernière du classement. 
+
+Les codes d'affichage pour les tableaux sont : 
+
+|    Code     |    S    |       P       |   OUT   |
+|-------------|---------|---------------|---------|
+| Description | Secteur | Stand (= PIT) | Abandon |
+
+#### Pour les essais libres :
+
+_**Tri temps meilleur tour**_
+
+| Numéro de la voiture | S1 | S2 | S3 | Temps meilleur tour |
+|----------------------|----|----|----|---------------------|
+| 2                    | 35 | 39 | 38 | 1min 52s            |
+| 55                   | 40 | 36 | 39 | 1min 55s            |
+| 14                   | 39 | 40 | 37 | 1min 56s            |
+| 28                   | 37 | 40 | 39 | 1min 56s            |
+
+#### Pour les qualifications :
+
+_**Tri temps meilleur tour**_
+
+| Numéro de la voiture | S1 | S2 | S3 | Temps tour | Temps meilleur tour |
+|----------------------|----|----|----|------------|---------------------|
+| 14                   | 39 | 40 | 37 | 1min 56s   | 1min 32s            |
+| 2                    | 35 | 39 | 38 | 1min 52s   | 1min 47s            |
+| 55                   | 40 | 36 | 39 | 1min 55s   | 1min 55s            |
+| 28                   | 39 | 40 | 37 | 1min 56s   | 1min 39s            |
+
+#### Pour la course :
+
+_**Tri position dans la course**_
+
+| Numéro de la voiture | S1 | S2 | S3 | Temps tour | Lap |
+|----------------------|----|----|----|------------|-----|
+| 2                    | 35 | 39 | 38 | 1min 52s   | 14  |
+| 55                   | 40 | 36 | 39 | 1min 55s   | 14  |
+| 14                   | 39 | 40 | 37 | 1min 56s   | 14  |
+| 28                   | 39 | 40 | 37 | 1min 56s   | 14  |
+
+\pagebreak
 
 Conclusion
 ----------
@@ -235,3 +344,11 @@ compréhension par rapport au cahier des charges, ce qui nous a pris un peu de
 temps au début et, par conséquent, un retard par rapport au planning que nous 
 avons pu rattraper en courant d'année. 
 
+\pagebreak
+
+Exemplaire du code
+------------------
+
+```C
+\\TODO
+```
