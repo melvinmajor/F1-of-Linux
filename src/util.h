@@ -1,22 +1,20 @@
-#include <time.h>
-#include <sys/types.h>
-#include <semaphore.h>
-#include "lapInfo.h"
+#ifndef UTIL_H
+#define UTIL_H
 
-void sleep_ms(int ms);
+#include "carstruct.h"
 
-void *create_shared_memory(size_t size);
+// TODO rename
+struct e {
+    int car_index;
+    int value;
+};
 
-sem_t *init_shared_sem(int init_value);
+int number_of_car_allowed(Car *cars, int step);
 
-void wait_n_times(sem_t *sem, int n);
+void sort_car_by_time(struct e *result, Car *car, int step);
 
-void signal_n_times(sem_t *sem, int n);
+void sort_car_by_lap(struct e *result, Car *car, int step);
 
-int cars_still_racing(struct LapInfo *lap_infos, int car_number);
+int min_from_array(const int *array, int size);
 
-int done(struct LapInfo *lap_infos, int car_number);
-
-unsigned int lap_time(struct LapInfo *lap_info);
-
-void reset(struct LapInfo *lap_infos, int length);
+#endif //UTIL_H

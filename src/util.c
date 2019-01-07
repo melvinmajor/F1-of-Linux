@@ -1,66 +1,77 @@
-#include "lapInfo.h"
-#include <semaphore.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <time.h>
+#include "util.h"
+#include <stdlib.h>
+#include "options.h"
 
-void sleep_ms(int ms) {
-    struct timespec sleep_time = {.tv_sec = 0, .tv_nsec = ms * 1000000};
-    nanosleep(&sleep_time, NULL);
+int comp(const void *a, const void *b) {
+    int first = ((struct e *) a)->value;
+    int second = ((struct e *) b)->value;
+
+    if (first == second) return 0;
+    else if (first == -1) return -1;
+    else if (second == -1) return 1;
+    else return first - second;
 }
 
-void *create_shared_memory(size_t size) {
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_ANONYMOUS | MAP_SHARED;
-    return mmap(NULL, size, prot, flags, 0, 0);
-}
+void sort_car_by_time(struct e *result, Car *car, int step) {
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *c = &car[i];
+        RaceStep *race_step = &c->race_steps[step];
+        if (!race_step->allowed) {
+            result[i] = (struct e) {
+                    .car_index = i,
+                    .value = -1
+            };
+            continue;
+        }
 
-sem_t *init_shared_sem(int init_value) {
-    sem_t *sem = (sem_t *)create_shared_memory(sizeof(sem_t));
-    sem_init(sem, 1, init_value);
-    return sem;
-}
+        int lap_count = race_step->lap;
+        int laps[lap_count];
 
-void signal_n_times(sem_t *sem, int n) {
-    for (int i = 0; i < n; i++)
-        sem_post(sem);
-}
+        for (int j = 0; j < lap_count; ++j) {
+            laps[j] = race_step->time[lap_count][0];
+            laps[j] += race_step->time[lap_count][1];
+            laps[j] += race_step->time[lap_count][2];
+        }
 
-void wait_n_times(sem_t *sem, int n) {
-    for (int i = 0; i < n; i++)
-        sem_wait(sem);
-}
+        result[i] = (struct e) {
+                .car_index = i,
+                .value = min_from_array(laps, lap_count)
+        };
 
-int cars_still_racing(struct LapInfo *lap_infos, int car_number) {
-    int count = 0;
-    for (int i = 0; i < car_number; i++) {
-        if (lap_infos[i].race_done == 0)
-            count++;
     }
-    return count;
+
+    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
 }
 
-int done(struct LapInfo *lap_infos, int car_number) { return cars_still_racing(lap_infos, car_number) == 0; }
+void sort_car_by_lap(struct e *result, Car *car, int step) {
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *c = &car[i];
+        RaceStep *race_step = &c->race_steps[step];
+        if (!race_step->allowed) {
+            result[i] = (struct e) {
+                    .car_index = i,
+                    .value = -1
+            };
+            continue;
+        }
 
-unsigned int lap_time(struct LapInfo *lap_info) {
-    unsigned int sum = 0;
-    for (int i = 0; i < 3; i++) {
-        sum += lap_info->current_time[i];
+        int lap_count = race_step->lap;
+
+        result[i] = (struct e) {
+                .car_index = i,
+                .value = lap_count
+        };
     }
-    return sum;
+
+    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
 }
 
-void reset(struct LapInfo *lap_infos, int length) {
-    for (int i = 0; i < length; i++) {
-        lap_infos[i].current_time[0] = 0;
-        lap_infos[i].current_time[1] = 0;
-        lap_infos[i].current_time[2] = 0;
-
-        lap_infos[i].current_lap = 0;
-        lap_infos[i].current_sector = 0;
-        lap_infos[i].in_stand = 0;
-        lap_infos[i].abandon = 0;
-        lap_infos[i].race_done = 0;
-        lap_infos[i].best_time = 0;
+int min_from_array(const int *array, int size) {
+    int min_value = -1;
+    for (int i = 0; i < size; ++i) {
+        if (array[i] < min_value || min_value == -1) {
+            min_value = array[i];
+        }
     }
+    return min_value;
 }

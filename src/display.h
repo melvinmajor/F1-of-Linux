@@ -1,7 +1,14 @@
-#include "lapInfo.h"
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
-void print_practice(struct LapInfo *lap_infos, int count);
+#include <semaphore.h>
+#include "carstruct.h"
+#include "sharedstruct.h"
 
-void print_qualif();
+void display(SharedStruct *shared_struct);
 
-void print_race();
+int cars_running(Car *cars);
+
+int done(Car *cars);
+
+#endif //DISPLAY_H

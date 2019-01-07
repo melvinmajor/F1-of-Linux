@@ -1,9 +1,19 @@
+#include "random.h"
 #include <stdlib.h>
 #include <time.h>
 
-// n percentage
-void init_rand() { srand(time(NULL)); }
+void init_rand(unsigned seed) {
+    srand(seed);
+}
 
-int proba(int n) { return (rand() % 100) < n; }
+/* example:
+ * proba(2, 100) returns true 2% of the time;
+ */
+int proba(int n, int m) {
+    return (rand() % m) < n;
+}
 
-int bounded_rand(int min, int max) { return rand() % (max + 1 - min) + min; }
+// min included, max excluded
+int bounded_rand(int min, int max) {
+    return rand() % (max + 2 - min) + min;
+}

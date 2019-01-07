@@ -1,8 +1,8 @@
-#include "timeUnit.h"
+#include "timeunit.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-struct TimeUnit to_time_unit(int ms) {
+TimeUnit to_time_unit(int ms) {
     struct TimeUnit timeUnit;
     div_t output;
 
@@ -19,7 +19,11 @@ struct TimeUnit to_time_unit(int ms) {
     return timeUnit;
 }
 
-int to_ms(struct TimeUnit timeUnit) {
+TimeUnit minutes(int minutes) {
+    return (TimeUnit) {.m=minutes, .s = 0, .ms = 0};
+}
+
+int to_ms(TimeUnit timeUnit) {
     int ms = 0;
     ms += timeUnit.ms;
     ms += timeUnit.s * 1000;
@@ -29,5 +33,5 @@ int to_ms(struct TimeUnit timeUnit) {
 
 void to_string(int ms, char *str) {
     struct TimeUnit time = to_time_unit(ms);
-    sprintf(str, "%d'%d", time.s, time.ms);
+    sprintf(str, "%d:%d'%d", time.m, time.s, time.ms);
 }
