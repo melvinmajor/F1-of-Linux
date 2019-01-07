@@ -86,7 +86,7 @@ void display_step(SharedStruct *shared_struct, int step_index) {
             } else {
                 char time[25];
                 to_string(sorted[i].value, time);
-                printf("name: %2s, lap time: %s\n", car->name, time);
+                printf("name: %2s, best lap time: %s\n", car->name, time);
             }
         }
     }
