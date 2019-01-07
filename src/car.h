@@ -6,7 +6,7 @@
 #include "sharedstruct.h"
 
 
-void car(SharedStruct *shared_struct, int index, int lap_length);
+void car(SharedStruct *shared_struct, int index);
 
 void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number);
 

@@ -31,26 +31,7 @@ sem_t *init_shared_sem(unsigned int init_value) {
     return sem;
 }
 
-int main(int argc, char *argv[]) {
-    int lap_length = 6000;
-
-    if(argc == 2){
-        int val = atoi(argv[1]);
-        if (val == 0) {
-            fprintf(stderr, "Lap length must be a non zero integer\n");
-            exit(1);
-        }
-        else if (val <= 7500 && val >= 4500) {
-            lap_length = val;
-        }
-        else {
-            fprintf(stderr, "Lap length must be beetween 4500 and 7500 meters\n");
-            exit(1);
-        }
-    } else {
-        printf("No arguments provided, defaulting to %d meters per lap\n", lap_length);
-    }
-
+int main() {
     char *ALL_CAR_NAMES[20] = {"44", "77", "5", "7", "3", "33", "11", "31", "18", "35",
                                "27", "55", "10", "28", "8", "20", "2", "14", "9", "16"};
 
@@ -102,7 +83,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "An error occurred while forking: %d\n", pid);
         exit(1);
     } else if (pid == 0) {
-        car(shared_struct, car_index, lap_length);
+        car(shared_struct, car_index);
         exit(0);
     } else {
         display(shared_struct);

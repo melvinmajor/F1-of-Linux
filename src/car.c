@@ -28,10 +28,10 @@ void sleep_ms(int ms) {
 }
 
 // function called after the fork, once for each car
-void car(SharedStruct *shared_struct, int index, int lap_length) {
+void car(SharedStruct *shared_struct, int index) {
     init_rand((unsigned int) getpid());
 
-    average_time = lap_length / 3;
+    average_time = 40000;
     variance = average_time * 10 / 100;
 
     step(shared_struct, index, P1, minutes(90), 0);
@@ -44,7 +44,7 @@ void car(SharedStruct *shared_struct, int index, int lap_length) {
 
     
     // TODO
-    int lap_number = 300000 / 1;
+    int lap_number = 15;
     step(shared_struct, index, RACE, minutes(90), lap_number);
     exit(0);
 }
