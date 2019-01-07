@@ -171,12 +171,14 @@ calendrier).
 Analyse du travail
 ------------------
 
+### Planning 
+
 Nous nous sommes réparti les taches de la manière suivante :
 
 - Utilisation d'un système de controle de versions, nous permettant 
 d'effectuer des changements chacun de notre coté (Git),
 
-- Creation d'un makefile afin de faciliter la compilation du projet,
+- Création d'un makefile afin de faciliter la compilation du projet,
 
 - Melvin a mis au clair le cahier des charges afin que nous comprenions tous 
 un peu mieux les attentes pour ce projet,
@@ -191,7 +193,18 @@ des charges,
 
 - Melvin et Dominik ont tenté de débugguer le projet lors du problème SIGSEGV,
 
-- ...
+### Création et gestion des processus
+
+Chaque voiture correspond à un processsus fils, tandis que le père s'occupe 
+de la gestion des étapes et de l'affichage. 
+
+Les processus communiquent entre eux par le biais de sémaphores.
+
+### Intéraction entre les processus
+
+```C
+\\TODO
+```
 
 \pagebreak
 
