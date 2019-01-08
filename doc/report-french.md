@@ -363,127 +363,73 @@ avons pu rattraper en courant de quadrimestre.
 Exemplaire du code
 ------------------
 
-### src/car.c
+### src/main.c
+
 ```C
 #include "car.h"
-#include "random.h"
-#include "step.h"
+#include "carstruct.h"
+#include "display.h"
+#include "options.h"
+#include "sharedstruct.h"
+#include "util.h"
+#include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
-//#define DEBUG
+int main() {
+    char *CAR_NAMES[NUMBER_OF_CARS] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
+                                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
 
-#ifdef DEBUG
-#define DIVIDER 100000
-#endif // DEBUG
+    pid_t pid = 0;
+    int car_index = 0;
 
-#ifndef DEBUG
-#define DIVIDER 1000
-#endif // DEBUG
+    size_t shared_struct_size = sizeof(SharedStruct);
+    SharedStruct *shared_struct = (SharedStruct *)create_shared_memory(shared_struct_size);
 
-// the average time of a sector
-int average_time;
+    sem_t *sem = init_shared_sem(0);
 
-int variance;
+    shared_struct->sem = sem;
+    shared_struct->step = -1;
 
-// function to sleep during x ms
-void sleep_ms(int ms) {
-    struct timespec sleep_time = {.tv_sec = 0, .tv_nsec = ms * 1000000};
-    nanosleep(&sleep_time, NULL);
-}
+    for (int i = 0; i < NUMBER_OF_CARS; i++) {
+        shared_struct->car_structs[i].name = CAR_NAMES[i];
 
-// function called after the fork, once for each car
-void car(SharedStruct *shared_struct, int index) {
-    init_rand((unsigned int)getpid());
-
-    average_time = 40000;
-    variance = average_time * 10 / 100;
-
-    step(shared_struct, index, P1, minutes(90), 0);
-    step(shared_struct, index, P2, minutes(90), 0);
-    step(shared_struct, index, P3, minutes(60), 0);
-
-    step(shared_struct, index, Q1, minutes(18), 0);
-    step(shared_struct, index, Q2, minutes(15), 0);
-    step(shared_struct, index, Q3, minutes(12), 0);
-
-    // TODO
-    int lap_number = 15;
-    step(shared_struct, index, RACE, minutes(90), lap_number);
-    exit(0);
-}
-
-// function used to generate random times and sleep depending on the value
-// the values are also assigned inside the race_step struct
-void generate_lap(RaceStep *race_step, int lap) {
-    race_step->stand = 0;
-    for (int i = 0; i < 3; ++i) {
-        int rand = bounded_rand(average_time - variance, average_time + variance);
-        sleep_ms(rand / DIVIDER);
-
-        if (i == 2 && proba(1, 100)) {
-            int time_at_stand = bounded_rand(19000, 21000);
-            sleep_ms(time_at_stand / DIVIDER);
-            rand += time_at_stand;
-            race_step->stand = 1;
-        }
-
-        if (lap != 0 && proba(1, 600)) {
-            race_step->out = 1;
-            break;
-        }
-
-        race_step->time[lap][i] = rand;
-    }
-}
-
-// function called once for each step of the formula 1 weekend
-void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
-    while (shared_struct->step != step_index) {
-    }
-
-    sem_wait(shared_struct->sem);
-
-    Car *car = &shared_struct->car_structs[car_index];
-    RaceStep *race_step = &car->race_steps[step_index];
-
-    if (!race_step->allowed) {
-        race_step->done = 1;
-        return;
-    }
-
-    int total_time = to_ms(min);
-
-    int current_time = 0;
-    int lap = 0;
-
-    while (1) {
-        generate_lap(race_step, lap);
-
-        if (race_step->out)
-            break;
-
-        int sum = 0;
-        sum += race_step->time[lap][0];
-        sum += race_step->time[lap][1];
-        sum += race_step->time[lap][2];
-
-        if ((step_index != RACE && current_time + sum > total_time) || (step_index == RACE && lap == lap_number)) {
-            break;
-        } else {
-            current_time += sum;
-            race_step->lap = lap++;
+        for (int j = 0; j < 7; ++j) {
+            RaceStep race_step = {.lap = 0, .stand = 0, .out = 0, .done = 0, .allowed = 0};
+            shared_struct->car_structs[i].race_steps[j] = race_step;
         }
     }
 
-    race_step->done = 1;
+    for (int i = 0; i < NUMBER_OF_CARS; i++) {
+        car_index = i;
+        pid = fork();
+        if (pid == 0)
+            break;
+    }
+
+    if (pid < 0) {
+        fprintf(stderr, "An error occurred while forking: %d\n", pid);
+        exit(1);
+    } else if (pid == 0) {
+        car(shared_struct, car_index);
+        exit(0);
+    } else {
+        display(shared_struct);
+        for (int i = 0; i < NUMBER_OF_CARS; ++i)
+            wait(NULL);
+        munmap(shared_struct, shared_struct_size);
+        munmap(sem, sizeof(sem_t));
+        exit(0);
+    }
 }
 ```
 
-
 ### src/display.c
+
 ```C
 #include "display.h"
 #include "options.h"
@@ -698,73 +644,128 @@ int done(Car *cars) {
 }
 ```
 
+### src/car.c
 
-### src/main.c
 ```C
 #include "car.h"
-#include "carstruct.h"
-#include "display.h"
-#include "options.h"
-#include "sharedstruct.h"
-#include "util.h"
-#include <semaphore.h>
+#include "random.h"
+#include "step.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
-int main() {
-    char *CAR_NAMES[NUMBER_OF_CARS] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
-                                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
+//#define DEBUG
 
-    pid_t pid = 0;
-    int car_index = 0;
+#ifdef DEBUG
+#define DIVIDER 100000
+#endif // DEBUG
 
-    size_t shared_struct_size = sizeof(SharedStruct);
-    SharedStruct *shared_struct = (SharedStruct *)create_shared_memory(shared_struct_size);
+#ifndef DEBUG
+#define DIVIDER 1000
+#endif // DEBUG
 
-    sem_t *sem = init_shared_sem(0);
+// the average time of a sector
+int average_time;
 
-    shared_struct->sem = sem;
-    shared_struct->step = -1;
+int variance;
 
-    for (int i = 0; i < NUMBER_OF_CARS; i++) {
-        shared_struct->car_structs[i].name = CAR_NAMES[i];
+// function to sleep during x ms
+void sleep_ms(int ms) {
+    struct timespec sleep_time = {.tv_sec = 0, .tv_nsec = ms * 1000000};
+    nanosleep(&sleep_time, NULL);
+}
 
-        for (int j = 0; j < 7; ++j) {
-            RaceStep race_step = {.lap = 0, .stand = 0, .out = 0, .done = 0, .allowed = 0};
-            shared_struct->car_structs[i].race_steps[j] = race_step;
+// function called after the fork, once for each car
+void car(SharedStruct *shared_struct, int index) {
+    init_rand((unsigned int)getpid());
+
+    average_time = 40000;
+    variance = average_time * 10 / 100;
+
+    step(shared_struct, index, P1, minutes(90), 0);
+    step(shared_struct, index, P2, minutes(90), 0);
+    step(shared_struct, index, P3, minutes(60), 0);
+
+    step(shared_struct, index, Q1, minutes(18), 0);
+    step(shared_struct, index, Q2, minutes(15), 0);
+    step(shared_struct, index, Q3, minutes(12), 0);
+
+    // TODO
+    int lap_number = 15;
+    step(shared_struct, index, RACE, minutes(90), lap_number);
+    exit(0);
+}
+
+// function used to generate random times and sleep depending on the value
+// the values are also assigned inside the race_step struct
+void generate_lap(RaceStep *race_step, int lap) {
+    race_step->stand = 0;
+    for (int i = 0; i < 3; ++i) {
+        int rand = bounded_rand(average_time - variance, average_time + variance);
+        sleep_ms(rand / DIVIDER);
+
+        if (i == 2 && proba(1, 100)) {
+            int time_at_stand = bounded_rand(19000, 21000);
+            sleep_ms(time_at_stand / DIVIDER);
+            rand += time_at_stand;
+            race_step->stand = 1;
+        }
+
+        if (lap != 0 && proba(1, 600)) {
+            race_step->out = 1;
+            break;
+        }
+
+        race_step->time[lap][i] = rand;
+    }
+}
+
+// function called once for each step of the formula 1 weekend
+void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
+    while (shared_struct->step != step_index) {
+    }
+
+    sem_wait(shared_struct->sem);
+
+    Car *car = &shared_struct->car_structs[car_index];
+    RaceStep *race_step = &car->race_steps[step_index];
+
+    if (!race_step->allowed) {
+        race_step->done = 1;
+        return;
+    }
+
+    int total_time = to_ms(min);
+
+    int current_time = 0;
+    int lap = 0;
+
+    while (1) {
+        generate_lap(race_step, lap);
+
+        if (race_step->out)
+            break;
+
+        int sum = 0;
+        sum += race_step->time[lap][0];
+        sum += race_step->time[lap][1];
+        sum += race_step->time[lap][2];
+
+        if ((step_index != RACE && current_time + sum > total_time) || (step_index == RACE && lap == lap_number)) {
+            break;
+        } else {
+            current_time += sum;
+            race_step->lap = lap++;
         }
     }
 
-    for (int i = 0; i < NUMBER_OF_CARS; i++) {
-        car_index = i;
-        pid = fork();
-        if (pid == 0)
-            break;
-    }
-
-    if (pid < 0) {
-        fprintf(stderr, "An error occurred while forking: %d\n", pid);
-        exit(1);
-    } else if (pid == 0) {
-        car(shared_struct, car_index);
-        exit(0);
-    } else {
-        display(shared_struct);
-        for (int i = 0; i < NUMBER_OF_CARS; ++i)
-            wait(NULL);
-        munmap(shared_struct, shared_struct_size);
-        munmap(sem, sizeof(sem_t));
-        exit(0);
-    }
+    race_step->done = 1;
 }
 ```
 
-
 ### src/random.c
+
 ```C
 #include "random.h"
 #include <stdlib.h>
@@ -817,10 +818,11 @@ int to_ms(TimeUnit timeUnit) {
 void to_string(int ms, char *str) {
     struct TimeUnit time = to_time_unit(ms);
     sprintf(str, "%d:%d'%d", time.m, time.s, time.ms);
-}```
-
+}
+```
 
 ### src/util.c
+
 ```C
 #include "util.h"
 #include "options.h"
@@ -928,8 +930,8 @@ sem_t *init_shared_sem(unsigned int init_value) {
 }
 ```
 
-
 ### src/car.h
+
 ```C
 #ifndef CAR_H
 #define CAR_H
@@ -946,8 +948,8 @@ void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit m
 #endif //CAR_H
 ```
 
-
 ### src/carstruct.h
+
 ```C
 #ifndef CARSTRUCT_H
 #define CARSTRUCT_H
@@ -985,8 +987,8 @@ int done(Car *cars);
 #endif //DISPLAY_H
 ```
 
-
 ### src/options.h
+
 ```C
 #ifndef OPTIONS_H
 #define OPTIONS_H
@@ -996,8 +998,8 @@ int done(Car *cars);
 #endif //OPTIONS_H
 ```
 
-
 ### src/racestep.h
+
 ```C
 #ifndef RACESTEP_H
 #define RACESTEP_H
@@ -1020,8 +1022,8 @@ typedef struct RaceStep {
 #endif //RACESTEP_H
 ```
 
-
 ### src/random.h
+
 ```C
 #ifndef RANDOM_H
 #define RANDOM_H
@@ -1035,8 +1037,8 @@ int bounded_rand(int min, int max);
 #endif //RANDOM_H
 ```
 
-
 ### src/sharedstruct.h
+
 ```C
 #ifndef STRUCT_H
 #define STRUCT_H
@@ -1057,8 +1059,8 @@ typedef struct SharedStruct{
 #endif //STRUCT_H
 ```
 
-
 ### src/step.h
+
 ```C
 #ifndef STEP_H
 #define STEP_H
@@ -1076,8 +1078,8 @@ typedef struct SharedStruct{
 #endif //STEP_H
 ```
 
-
 ### src/timeunit.h
+
 ```C
 #ifndef TIMEUNIT_H
 #define TIMEUNIT_H
@@ -1100,8 +1102,8 @@ void to_string(int ms, char *str);
 #endif //TIMEUNIT_H
 ```
 
-
 ### src/util.h
+
 ```C
 #ifndef UTIL_H
 #define UTIL_H
@@ -1132,4 +1134,3 @@ sem_t *init_shared_sem(unsigned int init_value);
 
 #endif //UTIL_H
 ```
-
