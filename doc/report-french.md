@@ -1,11 +1,11 @@
 ---
-title: "Rapport du projet F1-of-Linux - Groupe 7"
+title: "Rapport du projet de Formule 1 - Groupe 7"
 author:
 - Melvin Campos Casares
 - Maxime De Cock
 - Dominik Fiedorczuk
 - Hubert Van De Walle
-date: 3 janvier 2018
+date: 8 janvier 2018
 titlepage: true
 ---
 
@@ -775,10 +775,12 @@ void init_rand(unsigned seed) { srand(seed); }
 int proba(int n, int m) { return (rand() % m) < n; }
 
 // min included, max excluded
-int bounded_rand(int min, int max) { return rand() % (max + 2 - min) + min; }```
+int bounded_rand(int min, int max) { return rand() % (max + 2 - min) + min; }
+```
 
 
 ### src/timeunit.c
+
 ```C
 #include "timeunit.h"
 #include <stdio.h>
