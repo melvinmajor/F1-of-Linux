@@ -64,7 +64,7 @@ void generate_lap(RaceStep *race_step, int lap) {
         }
 
         if (lap != 0 && proba(1, 600)) {
-            race_step->withdrawal = 1;
+            race_step->out = 1;
             break;
         }
 
@@ -95,7 +95,7 @@ void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit m
     while (1) {
         generate_lap(race_step, lap);
 
-        if (race_step->withdrawal)
+        if (race_step->out)
             break;
 
         int sum = 0;

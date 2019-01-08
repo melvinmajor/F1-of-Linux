@@ -8,7 +8,7 @@ typedef struct RaceStep {
     int lap;
 
     int stand;
-    int withdrawal;
+    int out;
 
     int time[48][3];
 
