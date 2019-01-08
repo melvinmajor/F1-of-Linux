@@ -195,16 +195,16 @@ des charges,
 
 ### Création et gestion des processus
 
-Chaque voiture correspond à un processsus fils, tandis que le père s'occupe 
+Chaque voiture correspond à un processus fils, tandis que le père s'occupe 
 de la gestion des étapes et de l'affichage. 
-
-Les processus communiquent entre eux par le biais de sémaphores.
 
 ### Intéraction entre les processus
 
-```C
-\\TODO
-```
+Le processus père s'occupe de la gestion de la course, permettant de prévenir les
+processus enfants quand il s'agit de passer à l'étape suivante. Il choisi également
+qui est autorisé à passer à l'étape suivante en fonction de son classement. 
+De plus celui-ci gère l'affichage, en utilisant les infos fournies par les processus
+voitures via une structure en mémoire partagée.
 
 \pagebreak
 
@@ -363,5 +363,4 @@ Exemplaire du code
 ------------------
 
 ```C
-\\TODO
 ```
