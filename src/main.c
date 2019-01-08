@@ -31,7 +31,7 @@ int main() {
         shared_struct->car_structs[i].name = CAR_NAMES[i];
 
         for (int j = 0; j < 7; ++j) {
-            RaceStep race_step = {.lap = 0, .stand = 0, .withdrawal = 0, .done = 0, .allowed = 0};
+            RaceStep race_step = {.lap = 0, .stand = 0, .out = 0, .done = 0, .allowed = 0};
             shared_struct->car_structs[i].race_steps[j] = race_step;
         }
     }

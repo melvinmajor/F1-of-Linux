@@ -110,11 +110,11 @@ void display_step(SharedStruct *shared_struct, int step_index) {
         }
 
         if (current_step == RACE) {
-            printf("\nname whitdrawed current lap\n");
-            printf("---- ---------- -----------\n");
+            printf("\nname out current lap\n");
+            printf("---- --- -----------\n");
         } else {
-            printf("\nname whitdrawed current lap best lap time\n");
-            printf("---- ---------- ----------- ------------\n");
+            printf("\nname out current lap best lap time\n");
+            printf("---- --- ----------- ------------\n");
         }
 
         for (int i = 0; i < NUMBER_OF_CARS; ++i) {
@@ -126,16 +126,16 @@ void display_step(SharedStruct *shared_struct, int step_index) {
             char time[25];
             to_string(sorted[i].value, time);
 
-            char withdrawal[4];
-            if (race_step->withdrawal)
-                strcpy(withdrawal, "yes");
+            char out[4];
+            if (race_step->out)
+                strcpy(out, "yes");
             else
-                strcpy(withdrawal, "no");
+                strcpy(out, "no");
 
             if (current_step == RACE) {
-                printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
+                printf("%2s   %-3s        %-2d\n", car->name, out, race_step->lap);
             } else {
-                printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
+                printf("%2s   %-3s        %-2d          %s\n", car->name, out, race_step->lap, time);
             }
         }
     }
@@ -151,11 +151,11 @@ void display_step(SharedStruct *shared_struct, int step_index) {
     }
 
     if (current_step == RACE) {
-        printf("\nname whitdrawed current lap\n");
-        printf("---- ---------- -----------\n");
+        printf("\nname out current lap\n");
+        printf("---- --- -----------\n");
     } else {
-        printf("\nname whitdrawed current lap best lap time\n");
-        printf("---- ---------- ----------- ------------\n");
+        printf("\nname out current lap best lap time\n");
+        printf("---- --- ----------- ------------\n");
     }
 
     for (int i = 0; i < NUMBER_OF_CARS; ++i) {
@@ -167,16 +167,16 @@ void display_step(SharedStruct *shared_struct, int step_index) {
         char time[25];
         to_string(sorted[i].value, time);
 
-        char withdrawal[4];
-        if (race_step->withdrawal)
-            strcpy(withdrawal, "yes");
+        char out[4];
+        if (race_step->out)
+            strcpy(out, "yes");
         else
-            strcpy(withdrawal, "no");
+            strcpy(out, "no");
 
         if (current_step == RACE) {
-            printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
+            printf("%2s   %-3s        %-2d\n", car->name, out, race_step->lap);
         } else {
-            printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
+            printf("%2s   %-3s        %-2d          %s\n", car->name, out, race_step->lap, time);
         }
     }
 
@@ -186,7 +186,7 @@ void display_step(SharedStruct *shared_struct, int step_index) {
             Car *car = &shared_struct->car_structs[sorted[i].car_index];
             RaceStep *race_step = &car->race_steps[step_index];
 
-            if (!race_step->allowed || race_step->withdrawal)
+            if (!race_step->allowed || race_step->out)
                 continue;
             printf("\n\nThe winner of the race is %s !!!\n", car->name);
             break;
