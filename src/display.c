@@ -133,9 +133,9 @@ void display_step(SharedStruct *shared_struct, int step_index) {
                 strcpy(out, "no");
 
             if (current_step == RACE) {
-                printf("%2s   %-3s        %-2d\n", car->name, out, race_step->lap);
+                printf("%2s   %-3s %-2d\n", car->name, out, race_step->lap);
             } else {
-                printf("%2s   %-3s        %-2d          %s\n", car->name, out, race_step->lap, time);
+                printf("%2s   %-3s %-2d          %s\n", car->name, out, race_step->lap, time);
             }
         }
     }
@@ -174,9 +174,9 @@ void display_step(SharedStruct *shared_struct, int step_index) {
             strcpy(out, "no");
 
         if (current_step == RACE) {
-            printf("%2s   %-3s        %-2d\n", car->name, out, race_step->lap);
+            printf("%2s   %-3s %-2d\n", car->name, out, race_step->lap);
         } else {
-            printf("%2s   %-3s        %-2d          %s\n", car->name, out, race_step->lap, time);
+            printf("%2s   %-3s %-2d          %s\n", car->name, out, race_step->lap, time);
         }
     }
 
