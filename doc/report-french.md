@@ -18,10 +18,8 @@ Notre groupe est constitué de 4 personnes :
 
 - Melvin Campos Casares
 - Maxime De Cock
-- Dominik Fiederczuk
+- Dominik Fiedorczuk
 - Hubert Van De Walle
-
-\pagebreak
 
 Introduction et présentation du projet
 --------------------------------------
@@ -222,8 +220,6 @@ du temps consacré spécifiquement au projet en cours, nous avons su comment
 avancer dans le projet de façon plus claire et concise malgré l'impact non 
 négligeable sur la gestion du temps.
 
-\pagebreak
-
 ### Random
 
 Lors de l'implémentation du random, nous avons rencontré des difficultés 
@@ -247,7 +243,7 @@ autre valeur de temps réel, et ce, dans les deux sens.
 
 En effet, nos conversions n'étaient pas correctement écrites au départ, 
 faisant en sorte que nos conversions ne nous rendaient des valeurs peu 
-probables et arrondies; la conversion entre millisecondes et toute autre valeur de temps réel n'étaient pas correctement implémentées.
+probables et arrondies; la conversion entre millisecondes et toute autre valeur de temps réel n'étaient pas correctement implémentée.
 
 Après avoir reparcouru le code et avoir corrigé cela, la conversion fonctionne 
 correctement.
