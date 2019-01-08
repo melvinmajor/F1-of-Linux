@@ -7,7 +7,9 @@
 
 void display(SharedStruct *shared_struct);
 
-int cars_running(Car *cars);
+void init_step(SharedStruct *shared_struct, int step);
+
+void display_step(SharedStruct *shared_struct, int step_index);
 
 int done(Car *cars);
 

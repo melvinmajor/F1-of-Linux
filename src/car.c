@@ -6,7 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
-// #define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define DIVIDER 100000
@@ -63,7 +63,7 @@ void generate_lap(RaceStep *race_step, int lap) {
             race_step->stand = 1;
         }
 
-        if (lap != 0 && proba(1, 400)) {
+        if (lap != 0 && proba(1, 600)) {
             race_step->withdrawal = 1;
             break;
         }
@@ -74,8 +74,9 @@ void generate_lap(RaceStep *race_step, int lap) {
 
 // function called once for each step of the formula 1 weekend
 void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
-    while (shared_struct->step != step_index)
-        ;
+    while (shared_struct->step != step_index) {
+    }
+
     sem_wait(shared_struct->sem);
 
     Car *car = &shared_struct->car_structs[car_index];

@@ -15,6 +15,30 @@ int number_of_cars_allowed;
 int current_step;
 char step_name[5];
 
+// function called from the main method as the parent process
+void display(SharedStruct *shared_struct) {
+    init_step(shared_struct, P1);
+    display_step(shared_struct, P1);
+
+    init_step(shared_struct, P2);
+    display_step(shared_struct, P2);
+
+    init_step(shared_struct, P3);
+    display_step(shared_struct, P3);
+
+    init_step(shared_struct, Q1);
+    display_step(shared_struct, Q1);
+
+    init_step(shared_struct, Q2);
+    display_step(shared_struct, Q2);
+
+    init_step(shared_struct, Q3);
+    display_step(shared_struct, Q3);
+
+    init_step(shared_struct, RACE);
+    display_step(shared_struct, RACE);
+}
+
 // set the current step name, allow the cars for the next step depending on their positions
 // and the signal them with a semaphore
 void init_step(SharedStruct *shared_struct, int step) {
@@ -49,9 +73,19 @@ void init_step(SharedStruct *shared_struct, int step) {
     else
         number_of_cars_allowed = 20;
 
+    char *names[number_of_cars_allowed];
+
     for (int i = 0; i < number_of_cars_allowed; ++i) {
-        shared_struct->car_structs[qualified[i]].race_steps[step].allowed = 1;
+        int car_index = qualified[i];
+        names[i] = shared_struct->car_structs[car_index].name;
+        shared_struct->car_structs[car_index].race_steps[step].allowed = 1;
     }
+
+    printf("\n\nThe followings cars are qualified for the coming step:\n");
+    print_car_names(names, number_of_cars_allowed);
+    printf("\n");
+
+    sleep(1);
 
     shared_struct->step = step;
 
@@ -62,9 +96,10 @@ void init_step(SharedStruct *shared_struct, int step) {
 
 // function used to display a step
 void display_step(SharedStruct *shared_struct, int step_index) {
-    printf("Starting %s------------------------------\n\n", step_name);
+    printf("Starting %s---------------------------\n\n", step_name);
 
     while (!done(shared_struct->car_structs)) {
+
         sleep(1);
 
         struct e sorted[NUMBER_OF_CARS];
@@ -74,52 +109,96 @@ void display_step(SharedStruct *shared_struct, int step_index) {
             sort_car_by_time(sorted, shared_struct->car_structs, current_step);
         }
 
-        printf("------------");
+        if (current_step == RACE) {
+            printf("\nname whitdrawed current lap\n");
+            printf("---- ---------- -----------\n");
+        } else {
+            printf("\nname whitdrawed current lap best lap time\n");
+            printf("---- ---------- ----------- ------------\n");
+        }
+
         for (int i = 0; i < NUMBER_OF_CARS; ++i) {
             Car *car = &shared_struct->car_structs[sorted[i].car_index];
             RaceStep *race_step = &car->race_steps[step_index];
             if (!race_step->allowed)
                 continue;
 
+            char time[25];
+            to_string(sorted[i].value, time);
+
+            char withdrawal[4];
+            if (race_step->withdrawal)
+                strcpy(withdrawal, "yes");
+            else
+                strcpy(withdrawal, "no");
+
             if (current_step == RACE) {
-                printf("name: %2s, current lap: %d\n", car->name, sorted[i].value);
+                printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
             } else {
-                char time[25];
-                to_string(sorted[i].value, time);
-                printf("name: %2s, best lap time: %s\n", car->name, time);
+                printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
             }
         }
     }
 
     printf("%s done------------------------------\n\n", step_name);
+    printf("Summary\n");
+
+    struct e sorted[NUMBER_OF_CARS];
+    if (current_step == RACE) {
+        sort_car_by_lap(sorted, shared_struct->car_structs, current_step);
+    } else {
+        sort_car_by_time(sorted, shared_struct->car_structs, current_step);
+    }
+
+    if (current_step == RACE) {
+        printf("\nname whitdrawed current lap\n");
+        printf("---- ---------- -----------\n");
+    } else {
+        printf("\nname whitdrawed current lap best lap time\n");
+        printf("---- ---------- ----------- ------------\n");
+    }
+
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *car = &shared_struct->car_structs[sorted[i].car_index];
+        RaceStep *race_step = &car->race_steps[step_index];
+        if (!race_step->allowed)
+            continue;
+
+        char time[25];
+        to_string(sorted[i].value, time);
+
+        char withdrawal[4];
+        if (race_step->withdrawal)
+            strcpy(withdrawal, "yes");
+        else
+            strcpy(withdrawal, "no");
+
+        if (current_step == RACE) {
+            printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
+        } else {
+            printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
+        }
+    }
+
+    if (current_step == RACE) {
+
+        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+            Car *car = &shared_struct->car_structs[sorted[i].car_index];
+            RaceStep *race_step = &car->race_steps[step_index];
+
+            if (!race_step->allowed || race_step->withdrawal)
+                continue;
+            printf("\n\nThe winner of the race is %s !!!\n", car->name);
+            break;
+        }
+
+    } else {
+        sleep(2);
+    }
 }
 
-// function called from the main method as the parent process
-void display(SharedStruct *shared_struct) {
-    init_step(shared_struct, P1);
-    display_step(shared_struct, P1);
-
-    init_step(shared_struct, P2);
-    display_step(shared_struct, P2);
-
-    init_step(shared_struct, P3);
-    display_step(shared_struct, P3);
-
-    init_step(shared_struct, Q1);
-    display_step(shared_struct, Q1);
-
-    init_step(shared_struct, Q2);
-    display_step(shared_struct, Q2);
-
-    init_step(shared_struct, Q3);
-    display_step(shared_struct, Q3);
-
-    init_step(shared_struct, RACE);
-    display_step(shared_struct, RACE);
-}
-
-// utility function used to get the number of cars running
-int cars_running(Car *cars) {
+// function returning 1 if the current step is done
+int done(Car *cars) {
     int count = 0;
     for (int i = 0; i < NUMBER_OF_CARS; ++i) {
         Car *car = &cars[i];
@@ -128,8 +207,5 @@ int cars_running(Car *cars) {
         if (!car->race_steps[current_step].done)
             ++count;
     }
-    return count;
+    return count == 0;
 }
-
-// function returning 1 if the current step is done
-int done(Car *cars) { return cars_running(cars) == 0; }

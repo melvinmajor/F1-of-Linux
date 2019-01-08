@@ -3,6 +3,7 @@
 #include "display.h"
 #include "options.h"
 #include "sharedstruct.h"
+#include "util.h"
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,39 +12,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-// utility function returning a pointer from shared memory
-void *create_shared_memory(size_t size) {
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_ANONYMOUS | MAP_SHARED;
-    void *ptr = mmap(NULL, size, prot, flags, 0, 0);
-    if (ptr == MAP_FAILED) {
-        fprintf(stderr, "Error mmap\n");
-        exit(1);
-    }
-    return ptr;
-}
-
-// utility function returning a pointer to a semaphore in shared memory
-sem_t *init_shared_sem(unsigned int init_value) {
-    sem_t *sem = (sem_t *)create_shared_memory(sizeof(sem_t));
-    sem_init(sem, 1, init_value);
-    return sem;
-}
-
 int main() {
-    char *ALL_CAR_NAMES[20] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
-                               "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
-
-    // only used for debugging
-    if (NUMBER_OF_CARS != 20) {
-        fprintf(stderr, "Not yet implemented %d\n", NUMBER_OF_CARS);
-        exit(1);
-    }
-
-    char *CAR_NAMES[NUMBER_OF_CARS];
-    for (int i = 0; i < NUMBER_OF_CARS; i++) {
-        CAR_NAMES[i] = ALL_CAR_NAMES[i];
-    }
+    char *CAR_NAMES[NUMBER_OF_CARS] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
+                                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
 
     pid_t pid = 0;
     int car_index = 0;
