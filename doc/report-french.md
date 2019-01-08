@@ -1,10 +1,10 @@
 ---
 title: "Rapport du projet F1-of-Linux - Groupe 7"
 author:
-    - Melvin Campos Casares
-    - Maxime De Cock
-    - Dominik Fiedorczuk
-    - Hubert Van De Walle
+- Melvin Campos Casares
+- Maxime De Cock
+- Dominik Fiedorczuk
+- Hubert Van De Walle
 date: 3 janvier 2018
 titlepage: true
 ---
@@ -17,11 +17,8 @@ Rapport du projet : F1-of-Linux
 Notre groupe est constitué de 4 personnes :
 
 - Melvin Campos Casares
-
 - Maxime De Cock
-
 - Dominik Fiederczuk
-
 - Hubert Van De Walle
 
 \pagebreak
@@ -37,8 +34,8 @@ Notre but consiste à reproduire cela dans un langage de programmation
 performant à l'exécution des méthodes implémentées, le langage C. 
 Nous devons générer un affichage qui gèrera les séances d'essais libres, les 
 qualifications ainsi que la course. 
-De plus, certaines informations doivent etre disponible : temps au tour, temps 
-secteur, disqualification, arret aux stands, temps depuis le début de la 
+De plus, certaines informations doivent être disponible : temps au tour, temps 
+secteur, disqualification, arrêt aux stands, temps depuis le début de la 
 course.
 
 De plus, nous devons appliquer des concepts vus en cours en première année 
@@ -54,29 +51,29 @@ Cahier des charges
 ------------------
 
 Il y a 20 voitures engagées dans un grand prix. 
-Leurs numéros sont : 44, 77,  5,  7,  3, 33, 11, 31, 18, 35, 27, 55, 10, 28,  8
-                   , 20,  2, 14,  9, 16.
+Leurs numéros sont : 44, 77, 5, 7, 3, 33, 11, 31, 18, 35, 27, 55, 10, 28, 8
+, 20, 2, 14, 9, 16.
 
 Un circuit de F1 est divisé en 3 secteurs (S1, S2, S3). 
 
 Le calendrier d’un week-end de F1 est établi comme suit : 
 
-- Vendredi matin, une séance d’essais libres d’1h30 (P1) 
+- Vendredi matin, une séance d’essais libres de 1h30 (P1) 
 
-- Vendredi après-midi, une séance d’essais libres d’1h30 (P2) 
+- Vendredi après-midi, une séance d’essais libres de 1h30 (P2) 
 
-- Samedi matin, une séance d’essais libres d’1h (P3) 
+- Samedi matin, une séance d’essais libres de 1h (P3) 
 
-- Samedi après-midi, la séance de qualifications, divisée en 3 parties : 
+- Samedi après-midi, la séance de qualifications, divisé en 3 parties : 
 
-  - Q1, durée 18 minutes, qui élimine les 5 dernières voitures (qui occuperont 
-   les places 16 à 20 sur la grille de départ de la course) 
+- Q1, durée 18 minutes, qui élimine les 5 dernières voitures (qui occuperont 
+les places 16 à 20 sur la grille de départ de la course) 
 
-  - Q2, durée 15 minutes, qui élimine les 6 voitures suivantes (qui occuperont 
-   les places 11 à 16 sur la grille de départ de la course) 
-  
-  - Q3, durée 12 minutes, qui permet de classer les 10 voitures restantes pour 
-   établir les 10 premières places sur la grille de départ de la course 
+- Q2, durée 15 minutes, qui élimine les 6 voitures suivantes (qui occuperont 
+les places 11 à 16 sur la grille de départ de la course) 
+
+- Q3, durée 12 minutes, qui permet de classer les 10 voitures restantes pour 
+établir les 10 premières places sur la grille de départ de la course 
 
 - Dimanche après-midi, la course en elle-même. 
 
@@ -111,7 +108,7 @@ voiture et celle-ci reste dans le classement
 
 - Savoir si une voiture est aux stands (P) 
 
-- Savoir si une voitures est out (abandon de la séance) 
+- Savoir si une voiture est out (abandon de la séance) 
 
 - Dans ces 2 derniers cas, on conserve toujours le meilleur temps de la 
 voiture et celle-ci reste dans le classement 
@@ -153,16 +150,16 @@ par voitures)
 
 De plus, il vous est demandé de paramétrer votre programme. 
 
-En effet, les circuits peuvent être de longueur très variable et, dès lors le 
+En effet, les circuits peuvent être de longueur très variable et dès lors le 
 nombre de tours pour la course varie également (on essaie que le nombre total 
 de kilomètres soit toujours plus ou moins le même pour chacune des courses du 
 calendrier). 
- 
+
 #### On vous demande de : 
 
 - Réaliser le programme en C sous Linux 
 
-- Utiliser la mémoire partagée comme moyen de communication inter-processus 
+- Utiliser la mémoire partagée comme moyen de communication interprocessus 
 
 - Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
 
@@ -173,25 +170,30 @@ Analyse du travail
 
 ### Planning 
 
-Nous nous sommes réparti les taches de la manière suivante :
 
-- Utilisation d'un système de controle de versions, nous permettant 
-d'effectuer des changements chacun de notre coté (Git),
+Lors de l'avancement du projet, nous avons travaillé minimum par deux. Nous 
+nous concertions afin de nous réunir (et le cas échéant, nous faisions de la 
+vidéoconférence).
 
-- Création d'un makefile afin de faciliter la compilation du projet,
+Afin de faciliter l'édition du projet, nous avons utilisé un système de 
+contrôle de versions, nous permettant d'effectuer des changements chacun de 
+notre coté (git). 
+Nous avons également créé un makefile afin de faciliter la compilation du 
+projet.
+
+Nous nous sommes réparti les tâches de la manière suivante :
 
 - Melvin a mis au clair le cahier des charges afin que nous comprenions tous 
 un peu mieux les attentes pour ce projet,
 
 - Dominik et Maxime ont implémenté une fonction permettant la génération du 
 random, utilisée dans la génération du temps des secteurs ainsi que pour 
-certaines probabilitées,
+certaines probabilités,
 
-- Hubert a pris en charge le coté programmation lorsque les autres membres du 
-groupe ne voyaient pas comment implémenter correctement les demandes du cahier 
-des charges,
+- Hubert a pris en charge le côté programmation lorsque les autres membres du 
+groupe ne voyaient pas comment implémenter les demandes du cahier des charges,
 
-- Melvin et Dominik ont tenté de débugguer le projet lors du problème SIGSEGV,
+- Melvin et Dominik ont debug le projet lors du problème SIGSEGV.
 
 ### Création et gestion des processus
 
@@ -200,11 +202,11 @@ de la gestion des étapes et de l'affichage.
 
 ### Intéraction entre les processus
 
-Le processus père s'occupe de la gestion de la course, permettant de prévenir les
-processus enfants quand il s'agit de passer à l'étape suivante. Il choisi également
-qui est autorisé à passer à l'étape suivante en fonction de son classement. 
-De plus celui-ci gère l'affichage, en utilisant les infos fournies par les processus
-voitures via une structure en mémoire partagée.
+Le processus père s'occupe de la gestion de la course, permettant de prévenir 
+les processus enfants quand il s'agit de passer à l'étape suivante. Il choisit 
+également qui est autorisé à passer à l'étape suivante en fonction de son classement. 
+De plus celui-ci gère l'affichage, en utilisant les infos fournies par les 
+processus voitures via une structure en mémoire partagée.
 
 \pagebreak
 
@@ -215,7 +217,7 @@ Difficultés rencontrées et solutions
 
 Au vu du cahier des charges reçu, nous avons eu des difficultés à comprendre 
 plus concrètement comment mettre en oeuvre certaines implémentations demandées.
- A force de recherche et également de quelques questions posées dans le cadre 
+À force de recherche et également de quelques questions posées dans le cadre 
 du temps consacré spécifiquement au projet en cours, nous avons su comment 
 avancer dans le projet de façon plus claire et concise malgré l'impact non 
 négligeable sur la gestion du temps.
@@ -232,7 +234,7 @@ précis.
 srand(getpid());
 ```
 
-Nous avons reglé ce problème en seedant le PRNG _(Pseudo Random Number 
+Nous avons réglé ce problème en seedant le PRNG _(Pseudo Random Number 
 Generator)_ avec le PID, étant unique pour chaque processus. 
 
 ### Conversion du temps
@@ -240,13 +242,12 @@ Generator)_ avec le PID, étant unique pour chaque processus.
 Nous avons également rencontré quelques problèmes lors de l'implémentation de 
 _"timeUnit"_.
 
-_"timeUnit"_ est une structure permettant de passer de millisecondes en tout 
-autre valeur de temps réel et ce, dans les deux sens.
+_"timeUnit"_ est une structure permettant de passer de millisecondes en toute 
+autre valeur de temps réel, et ce, dans les deux sens.
 
 En effet, nos conversions n'étaient pas correctement écrites au départ, 
 faisant en sorte que nos conversions ne nous rendaient des valeurs peu 
-probables et arrondis; la conversion entre millisecondes et toute autre valeur 
-de temps réel n'étaient pas correctement implémentée.
+probables et arrondies; la conversion entre millisecondes et toute autre valeur de temps réel n'étaient pas correctement implémentées.
 
 Après avoir reparcouru le code et avoir corrigé cela, la conversion fonctionne 
 correctement.
@@ -263,7 +264,7 @@ avec la mémoire partagée.
 Nous avons rencontré un problème de synchronisation entre les sémaphores 
 utilisé dans le projet. 
 En effet, nous n'utilisions pas correctement les fonctions wait et signal des 
-sémaphores, impliquant par conséquent la nécessité de débugguer le projet 
+sémaphores, impliquant par conséquent la nécessité de déboguer le projet 
 afin de détecter précisément les zones posant problème et de pouvoir les 
 corriger. 
 
@@ -271,18 +272,18 @@ corriger.
 
 Le problème de deadlock rencontré provenait des processus fils, plus 
 précisément lors de la synchronisation de ces derniers. 
-En débugguant le projet, nous l'avons fixé. 
+En déboguant le projet, nous l'avons fixé. 
 
 ### Allocation mémoire dynamique
 
 En utilisant une longueur variable pour le circuit, le nombre de tours varie 
 et il faut donc allouer les tableaux contenant la durée des différents secteurs
- de manière dynamique. 
+de manière dynamique. 
 Par manque de temps, nous l'avons pas implémenté. 
 
 \pagebreak
 
-Evolutions futures
+Évolutions futures
 ------------------
 
 ### Un meilleur affichage
@@ -291,7 +292,7 @@ L'affichage actuellement présent dans le projet n'est pas exactement celui
 demandé d'après le cahier des charges. 
 Une réimplémentation de l'affichage pour contenir toutes les informations 
 demandées avec, éventuellement, un jeu de couleurs pourrait s'avérer 
-intéressant. 
+intéressante. 
 
 Par exemple, nous pourrions implémenter un affichage ressemblant à ceci : 
 
@@ -300,7 +301,7 @@ Dans le cas de OUT, la voiture est dernière du classement.
 
 Les codes d'affichage pour les tableaux sont : 
 
-|    Code     |    S    |       P       |   OUT   |
+| Code | S | P | OUT |
 |-------------|---------|---------------|---------|
 | Description | Secteur | Stand (= PIT) | Abandon |
 
@@ -310,10 +311,10 @@ _**Tri temps meilleur tour**_
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps meilleur tour |
 |----------------------|----|----|----|---------------------|
-| 2                    | 35 | 39 | 38 | 1min 52s            |
-| 55                   | 40 | 36 | 39 | 1min 55s            |
-| 14                   | 39 | 40 | 37 | 1min 56s            |
-| 28                   | 37 | 40 | 39 | 1min 56s            |
+| 2 | 35 | 39 | 38 | 1min 52s |
+| 55 | 40 | 36 | 39 | 1min 55s |
+| 14 | 39 | 40 | 37 | 1min 56s |
+| 28 | 37 | 40 | 39 | 1min 56s |
 
 #### Pour les qualifications :
 
@@ -321,10 +322,10 @@ _**Tri temps meilleur tour**_
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps tour | Temps meilleur tour |
 |----------------------|----|----|----|------------|---------------------|
-| 14                   | 39 | 40 | 37 | 1min 56s   | 1min 32s            |
-| 2                    | 35 | 39 | 38 | 1min 52s   | 1min 47s            |
-| 55                   | 40 | 36 | 39 | 1min 55s   | 1min 55s            |
-| 28                   | 39 | 40 | 37 | 1min 56s   | 1min 39s            |
+| 14 | 39 | 40 | 37 | 1min 56s | 1min 32s |
+| 2 | 35 | 39 | 38 | 1min 52s | 1min 47s |
+| 55 | 40 | 36 | 39 | 1min 55s | 1min 55s |
+| 28 | 39 | 40 | 37 | 1min 56s | 1min 39s |
 
 #### Pour la course :
 
@@ -332,10 +333,10 @@ _**Tri position dans la course**_
 
 | Numéro de la voiture | S1 | S2 | S3 | Temps tour | Lap |
 |----------------------|----|----|----|------------|-----|
-| 2                    | 35 | 39 | 38 | 1min 52s   | 14  |
-| 55                   | 40 | 36 | 39 | 1min 55s   | 14  |
-| 14                   | 39 | 40 | 37 | 1min 56s   | 14  |
-| 28                   | 39 | 40 | 37 | 1min 56s   | 14  |
+| 2 | 35 | 39 | 38 | 1min 52s | 14 |
+| 55 | 40 | 36 | 39 | 1min 55s | 14 |
+| 14 | 39 | 40 | 37 | 1min 56s | 14 |
+| 28 | 39 | 40 | 37 | 1min 56s | 14 |
 
 \pagebreak
 
@@ -346,7 +347,7 @@ Ce projet nous a permis d'apprendre à programmer de façon plus assidue. Lors
 de l'écriture d'une nouvelle méthode, nous testions systématiquement le projet 
 et en cas de problème, nous prenions le temps de relire le code et si 
 nécessaire, nous testions différentes méthodes (notamment le classique 
-_"print"_) pour débugguer notre méthode et avancer dans le projet. 
+_"print"_) pour déboguer notre méthode et avancer dans le projet. 
 Nous avons pu appliquer plusieurs concepts vu en cours théorique au courant du 
 quadrimestre et comprendre plus concrètement ce que ces concepts permettent de 
 faire (allocation d'une zone mémoire, appel d'une zone mémoire, sémaphores, 
@@ -355,12 +356,782 @@ algorithmes, fork, etc.).
 Au début de ce projet, nous avions rencontré quelques difficultés de 
 compréhension par rapport au cahier des charges, ce qui nous a pris un peu de 
 temps au début et, par conséquent, un retard par rapport au planning que nous 
-avons pu rattraper en courant d'année. 
+avons pu rattraper en courant de quadrimestre. 
 
 \pagebreak
 
 Exemplaire du code
 ------------------
 
+### main.c
+
 ```C
+#include "car.h"
+#include "carstruct.h"
+#include "display.h"
+#include "options.h"
+#include "sharedstruct.h"
+#include "util.h"
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main() {
+    char *CAR_NAMES[NUMBER_OF_CARS] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
+                                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
+
+    pid_t pid = 0;
+    int car_index = 0;
+
+    size_t shared_struct_size = sizeof(SharedStruct);
+    SharedStruct *shared_struct = (SharedStruct *)create_shared_memory(shared_struct_size);
+
+    sem_t *sem = init_shared_sem(0);
+
+    shared_struct->sem = sem;
+    shared_struct->step = -1;
+
+    for (int i = 0; i < NUMBER_OF_CARS; i++) {
+        shared_struct->car_structs[i].name = CAR_NAMES[i];
+
+        for (int j = 0; j < 7; ++j) {
+            RaceStep race_step = {.lap = 0, .stand = 0, .withdrawal = 0, .done = 0, .allowed = 0};
+            shared_struct->car_structs[i].race_steps[j] = race_step;
+        }
+    }
+
+    for (int i = 0; i < NUMBER_OF_CARS; i++) {
+        car_index = i;
+        pid = fork();
+        if (pid == 0)
+            break;
+    }
+
+    if (pid < 0) {
+        fprintf(stderr, "An error occurred while forking: %d\n", pid);
+        exit(1);
+    } else if (pid == 0) {
+        car(shared_struct, car_index);
+        exit(0);
+    } else {
+        display(shared_struct);
+        for (int i = 0; i < NUMBER_OF_CARS; ++i)
+            wait(NULL);
+        munmap(shared_struct, shared_struct_size);
+        munmap(sem, sizeof(sem_t));
+        exit(0);
+    }
+}
+```
+
+### display.c
+
+```C
+#include "display.h"
+#include "options.h"
+#include "step.h"
+#include "timeunit.h"
+#include "util.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+// contains index of qualified cars
+int qualified[NUMBER_OF_CARS];
+int number_of_cars_allowed;
+
+int current_step;
+char step_name[5];
+
+// function called from the main method as the parent process
+void display(SharedStruct *shared_struct) {
+    init_step(shared_struct, P1);
+    display_step(shared_struct, P1);
+
+    init_step(shared_struct, P2);
+    display_step(shared_struct, P2);
+
+    init_step(shared_struct, P3);
+    display_step(shared_struct, P3);
+
+    init_step(shared_struct, Q1);
+    display_step(shared_struct, Q1);
+
+    init_step(shared_struct, Q2);
+    display_step(shared_struct, Q2);
+
+    init_step(shared_struct, Q3);
+    display_step(shared_struct, Q3);
+
+    init_step(shared_struct, RACE);
+    display_step(shared_struct, RACE);
+}
+
+// set the current step name, allow the cars for the next step depending on their positions
+// and the signal them with a semaphore
+void init_step(SharedStruct *shared_struct, int step) {
+    current_step = step;
+
+    // they're all qualified for P1
+    if (step == P1) {
+        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+            qualified[i] = i;
+        }
+    }
+
+    if (step == P1)
+        strcpy(step_name, "P1");
+    else if (step == P2)
+        strcpy(step_name, "P2");
+    else if (step == P3)
+        strcpy(step_name, "P3");
+    else if (step == Q1)
+        strcpy(step_name, "Q1");
+    else if (step == Q2)
+        strcpy(step_name, "Q2");
+    else if (step == Q3)
+        strcpy(step_name, "Q3");
+    else if (step == RACE)
+        strcpy(step_name, "race");
+
+    if (step == Q2)
+        number_of_cars_allowed = 15;
+    else if (step == Q3 || step == RACE)
+        number_of_cars_allowed = 10;
+    else
+        number_of_cars_allowed = 20;
+
+    char *names[number_of_cars_allowed];
+
+    for (int i = 0; i < number_of_cars_allowed; ++i) {
+        int car_index = qualified[i];
+        names[i] = shared_struct->car_structs[car_index].name;
+        shared_struct->car_structs[car_index].race_steps[step].allowed = 1;
+    }
+
+    printf("\n\nThe followings cars are qualified for the coming step:\n");
+    print_car_names(names, number_of_cars_allowed);
+    printf("\n");
+
+    sleep(1);
+
+    shared_struct->step = step;
+
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        sem_post(shared_struct->sem);
+    }
+}
+
+// function used to display a step
+void display_step(SharedStruct *shared_struct, int step_index) {
+    printf("Starting %s---------------------------\n\n", step_name);
+
+    while (!done(shared_struct->car_structs)) {
+
+        sleep(1);
+
+        struct e sorted[NUMBER_OF_CARS];
+        if (current_step == RACE) {
+            sort_car_by_lap(sorted, shared_struct->car_structs, current_step);
+        } else {
+            sort_car_by_time(sorted, shared_struct->car_structs, current_step);
+        }
+
+        if (current_step == RACE) {
+            printf("\nname whitdrawed current lap\n");
+            printf("---- ---------- -----------\n");
+        } else {
+            printf("\nname whitdrawed current lap best lap time\n");
+            printf("---- ---------- ----------- ------------\n");
+        }
+
+        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+            Car *car = &shared_struct->car_structs[sorted[i].car_index];
+            RaceStep *race_step = &car->race_steps[step_index];
+            if (!race_step->allowed)
+                continue;
+
+            char time[25];
+            to_string(sorted[i].value, time);
+
+            char withdrawal[4];
+            if (race_step->withdrawal)
+                strcpy(withdrawal, "yes");
+            else
+                strcpy(withdrawal, "no");
+
+            if (current_step == RACE) {
+                printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
+            } else {
+                printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
+            }
+        }
+    }
+
+    printf("%s done------------------------------\n\n", step_name);
+    printf("Summary\n");
+
+    struct e sorted[NUMBER_OF_CARS];
+    if (current_step == RACE) {
+        sort_car_by_lap(sorted, shared_struct->car_structs, current_step);
+    } else {
+        sort_car_by_time(sorted, shared_struct->car_structs, current_step);
+    }
+
+    if (current_step == RACE) {
+        printf("\nname whitdrawed current lap\n");
+        printf("---- ---------- -----------\n");
+    } else {
+        printf("\nname whitdrawed current lap best lap time\n");
+        printf("---- ---------- ----------- ------------\n");
+    }
+
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *car = &shared_struct->car_structs[sorted[i].car_index];
+        RaceStep *race_step = &car->race_steps[step_index];
+        if (!race_step->allowed)
+            continue;
+
+        char time[25];
+        to_string(sorted[i].value, time);
+
+        char withdrawal[4];
+        if (race_step->withdrawal)
+            strcpy(withdrawal, "yes");
+        else
+            strcpy(withdrawal, "no");
+
+        if (current_step == RACE) {
+            printf("%2s   %-3s        %-2d\n", car->name, withdrawal, race_step->lap);
+        } else {
+            printf("%2s   %-3s        %-2d          %s\n", car->name, withdrawal, race_step->lap, time);
+        }
+    }
+
+    if (current_step == RACE) {
+
+        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+            Car *car = &shared_struct->car_structs[sorted[i].car_index];
+            RaceStep *race_step = &car->race_steps[step_index];
+
+            if (!race_step->allowed || race_step->withdrawal)
+                continue;
+            printf("\n\nThe winner of the race is %s !!!\n", car->name);
+            break;
+        }
+
+    } else {
+        sleep(2);
+    }
+}
+
+// function returning 1 if the current step is done
+int done(Car *cars) {
+    int count = 0;
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *car = &cars[i];
+        if (!car->race_steps[current_step].allowed)
+            continue;
+        if (!car->race_steps[current_step].done)
+            ++count;
+    }
+    return count == 0;
+}
+```
+
+### car.c
+
+```C
+#include "car.h"
+#include "random.h"
+#include "step.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+//#define DEBUG
+
+#ifdef DEBUG
+#define DIVIDER 100000
+#endif // DEBUG
+
+#ifndef DEBUG
+#define DIVIDER 1000
+#endif // DEBUG
+
+// the average time of a sector
+int average_time;
+
+int variance;
+
+// function to sleep during x ms
+void sleep_ms(int ms) {
+    struct timespec sleep_time = {.tv_sec = 0, .tv_nsec = ms * 1000000};
+    nanosleep(&sleep_time, NULL);
+}
+
+// function called after the fork, once for each car
+void car(SharedStruct *shared_struct, int index) {
+    init_rand((unsigned int)getpid());
+
+    average_time = 40000;
+    variance = average_time * 10 / 100;
+
+    step(shared_struct, index, P1, minutes(90), 0);
+    step(shared_struct, index, P2, minutes(90), 0);
+    step(shared_struct, index, P3, minutes(60), 0);
+
+    step(shared_struct, index, Q1, minutes(18), 0);
+    step(shared_struct, index, Q2, minutes(15), 0);
+    step(shared_struct, index, Q3, minutes(12), 0);
+
+    // TODO
+    int lap_number = 15;
+    step(shared_struct, index, RACE, minutes(90), lap_number);
+    exit(0);
+}
+
+// function used to generate random times and sleep depending on the value
+// the values are also assigned inside the race_step struct
+void generate_lap(RaceStep *race_step, int lap) {
+    race_step->stand = 0;
+    for (int i = 0; i < 3; ++i) {
+        int rand = bounded_rand(average_time - variance, average_time + variance);
+        sleep_ms(rand / DIVIDER);
+
+        if (i == 2 && proba(1, 100)) {
+            int time_at_stand = bounded_rand(19000, 21000);
+            sleep_ms(time_at_stand / DIVIDER);
+            rand += time_at_stand;
+            race_step->stand = 1;
+        }
+
+        if (lap != 0 && proba(1, 600)) {
+            race_step->withdrawal = 1;
+            break;
+        }
+
+        race_step->time[lap][i] = rand;
+    }
+}
+
+// function called once for each step of the formula 1 weekend
+void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
+    while (shared_struct->step != step_index) {
+    }
+
+    sem_wait(shared_struct->sem);
+
+    Car *car = &shared_struct->car_structs[car_index];
+    RaceStep *race_step = &car->race_steps[step_index];
+
+    if (!race_step->allowed) {
+        race_step->done = 1;
+        return;
+    }
+
+    int total_time = to_ms(min);
+
+    int current_time = 0;
+    int lap = 0;
+
+    while (1) {
+        generate_lap(race_step, lap);
+
+        if (race_step->withdrawal)
+            break;
+
+        int sum = 0;
+        sum += race_step->time[lap][0];
+        sum += race_step->time[lap][1];
+        sum += race_step->time[lap][2];
+
+        if ((step_index != RACE && current_time + sum > total_time) || (step_index == RACE && lap == lap_number)) {
+            break;
+        } else {
+            current_time += sum;
+            race_step->lap = lap++;
+        }
+    }
+
+    race_step->done = 1;
+}
+```
+
+### random.c
+
+```C
+#include "random.h"
+#include <stdlib.h>
+#include <time.h>
+
+void init_rand(unsigned seed) { srand(seed); }
+
+/* example:
+ * proba(2, 100) returns true 2% of the time;
+ */
+int proba(int n, int m) { return (rand() % m) < n; }
+
+// min included, max excluded
+int bounded_rand(int min, int max) { return rand() % (max + 2 - min) + min; }
+```
+
+### timeunit.c
+
+```C
+#include "timeunit.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+TimeUnit to_time_unit(int ms) {
+    struct TimeUnit timeUnit;
+    div_t output;
+
+    output = div(ms, 60000);
+    timeUnit.m = output.quot;
+    ms = output.rem;
+
+    output = div(ms, 1000);
+    timeUnit.s = output.quot;
+    ms = output.rem;
+
+    timeUnit.ms = ms;
+
+    return timeUnit;
+}
+
+TimeUnit minutes(int minutes) { return (TimeUnit){.m = minutes, .s = 0, .ms = 0}; }
+
+int to_ms(TimeUnit timeUnit) {
+    int ms = 0;
+    ms += timeUnit.ms;
+    ms += timeUnit.s * 1000;
+    ms += timeUnit.m * 60 * 1000;
+    return ms;
+}
+
+void to_string(int ms, char *str) {
+    struct TimeUnit time = to_time_unit(ms);
+    sprintf(str, "%d:%d'%d", time.m, time.s, time.ms);
+}
+```
+
+### util.c
+
+```C
+#include "util.h"
+#include "options.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+// print car names assuming a name length is at max 2
+void print_car_names(char **names, int length) {
+    int size = 4 * length;
+    char str[size];
+    strcpy(str, "");
+    for (int i = 0; i < length; ++i) {
+        strcat(str, names[i]);
+        if (i != length - 1)
+            strcat(str, ", ");
+    }
+    printf("%s\n", str);
+}
+
+int comp(const void *a, const void *b) {
+    int first = ((struct e *)a)->value;
+    int second = ((struct e *)b)->value;
+
+    if (first == second)
+        return 0;
+    else if (first == -1)
+        return -1;
+    else if (second == -1)
+        return 1;
+    else
+        return first - second;
+}
+
+void sort_car_by_time(struct e *result, Car *car, int step) {
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *c = &car[i];
+        RaceStep *race_step = &c->race_steps[step];
+        if (!race_step->allowed) {
+            result[i] = (struct e){.car_index = i, .value = -1};
+            continue;
+        }
+
+        int lap_count = race_step->lap;
+        int laps[lap_count];
+
+        for (int j = 0; j < lap_count; ++j) {
+            laps[j] = race_step->time[lap_count][0];
+            laps[j] += race_step->time[lap_count][1];
+            laps[j] += race_step->time[lap_count][2];
+        }
+
+        result[i] = (struct e){.car_index = i, .value = min_from_array(laps, lap_count)};
+    }
+
+    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
+}
+
+void sort_car_by_lap(struct e *result, Car *car, int step) {
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        Car *c = &car[i];
+        RaceStep *race_step = &c->race_steps[step];
+        if (!race_step->allowed) {
+            result[i] = (struct e){.car_index = i, .value = -1};
+            continue;
+        }
+
+        int lap_count = race_step->lap;
+
+        result[i] = (struct e){.car_index = i, .value = lap_count};
+    }
+
+    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
+}
+
+int min_from_array(const int *array, int size) {
+    int min_value = -1;
+    for (int i = 0; i < size; ++i) {
+        if (array[i] < min_value || min_value == -1) {
+            min_value = array[i];
+        }
+    }
+    return min_value;
+}
+
+// utility function returning a pointer from shared memory
+void *create_shared_memory(size_t size) {
+    int prot = PROT_READ | PROT_WRITE;
+    int flags = MAP_ANONYMOUS | MAP_SHARED;
+    void *ptr = mmap(NULL, size, prot, flags, 0, 0);
+    if (ptr == MAP_FAILED) {
+        fprintf(stderr, "Error mmap\n");
+        exit(1);
+    }
+    return ptr;
+}
+
+// utility function returning a pointer to a semaphore in shared memory
+sem_t *init_shared_sem(unsigned int init_value) {
+    sem_t *sem = (sem_t *)create_shared_memory(sizeof(sem_t));
+    sem_init(sem, 1, init_value);
+    return sem;
+}
+```
+
+### car.h
+
+```C
+#ifndef CAR_H
+#define CAR_H
+
+#include "carstruct.h"
+#include "timeunit.h"
+#include "sharedstruct.h"
+
+
+void car(SharedStruct *shared_struct, int index);
+
+void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number);
+
+#endif //CAR_H
+```
+
+### carstruct.h
+
+```C
+#ifndef CARSTRUCT_H
+#define CARSTRUCT_H
+
+#include "racestep.h"
+
+// struct containing a car name and a race step struct for each step
+typedef struct Car {
+    char *name;
+
+    RaceStep race_steps[7];
+} Car;
+
+#endif //CARSTRUCT_H
+```
+
+### display.h
+
+```C
+#ifndef DISPLAY_H
+#define DISPLAY_H
+
+#include <semaphore.h>
+#include "carstruct.h"
+#include "sharedstruct.h"
+
+void display(SharedStruct *shared_struct);
+
+void init_step(SharedStruct *shared_struct, int step);
+
+void display_step(SharedStruct *shared_struct, int step_index);
+
+int done(Car *cars);
+
+#endif //DISPLAY_H
+```
+
+### options.h
+
+```C
+#ifndef OPTIONS_H
+#define OPTIONS_H
+
+#define NUMBER_OF_CARS 20
+
+#endif //OPTIONS_H
+```
+
+### racestep.h
+
+```C
+#ifndef RACESTEP_H
+#define RACESTEP_H
+
+// struct containing informations about a formula 1 step
+typedef struct RaceStep {
+    int allowed;
+
+    int lap;
+
+    int stand;
+    int withdrawal;
+
+    int time[48][3];
+
+    int done;
+} RaceStep;
+
+
+#endif //RACESTEP_H
+```
+
+### random.h
+
+```C
+#ifndef RANDOM_H
+#define RANDOM_H
+
+void init_rand(unsigned seed);
+
+int proba(int n, int m);
+
+int bounded_rand(int min, int max);
+
+#endif //RANDOM_H
+```
+
+### sharedstruct.h
+
+```C
+#ifndef STRUCT_H
+#define STRUCT_H
+
+#include "carstruct.h"
+#include "options.h"
+#include <semaphore.h>
+
+// struct containing all the informations shared beetween cars and the main process
+typedef struct SharedStruct{
+    Car car_structs[NUMBER_OF_CARS];
+
+    sem_t *sem;
+
+    int step;
+} SharedStruct;
+
+#endif //STRUCT_H
+```
+
+### step.h
+
+```C
+#ifndef STEP_H
+#define STEP_H
+
+#define P1 0
+#define P2 1
+#define P3 2
+
+#define Q1 3
+#define Q2 4
+#define Q3 5
+
+#define RACE 6
+
+#endif //STEP_H
+```
+
+### timeunit.h
+
+```C
+#ifndef TIMEUNIT_H
+#define TIMEUNIT_H
+
+typedef struct TimeUnit {
+    int m;
+    int s;
+    int ms;
+} TimeUnit;
+
+TimeUnit to_time_unit(int ms);
+
+TimeUnit minutes(int minutes);
+
+int to_ms(TimeUnit timeUnit);
+
+void to_string(int ms, char *str);
+
+
+#endif //TIMEUNIT_H
+```
+
+### util.h
+
+```C
+#ifndef UTIL_H
+#define UTIL_H
+
+#include "carstruct.h"
+#include <sys/types.h>
+#include <semaphore.h>
+
+// TODO rename
+struct e {
+    int car_index;
+    int value;
+};
+
+void print_car_names(char **names, int length);
+
+int number_of_car_allowed(Car *cars, int step);
+
+void sort_car_by_time(struct e *result, Car *car, int step);
+
+void sort_car_by_lap(struct e *result, Car *car, int step);
+
+int min_from_array(const int *array, int size);
+
+void *create_shared_memory(size_t size);
+
+sem_t *init_shared_sem(unsigned int init_value);
+
+#endif //UTIL_H
 ```
