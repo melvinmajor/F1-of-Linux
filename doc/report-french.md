@@ -1,13 +1,34 @@
 ---
-title: "Rapport du projet de Formule 1 - Groupe 7"
+title: "Rapport de projet \"Formule 1\" Groupe 7"
+subtitle: "Rapport de seconde session"
 author:
 - Melvin Campos Casares
 - Maxime De Cock
 - Dominik Fiedorczuk
 - Hubert Van De Walle
-date: 8 janvier 2018
+date: 26 aout 2019
+lang: fr
+papersize: a4
+fontsize: 12pt
+whitespace: small
+margin-top: 1cm
+margin-left: 1.75cm
+margin-right: 1.75cm
+margin-bottom: 1cm
+subject: Rapport de projet de programmation en C de Formule 1
+keywords: [OS, Projet, Formule 1, F1, développement, C, EPHEC, 2TI]
 titlepage: true
+titlepage-rule-height: 6
+titlepage-rule-color: "ef4524"
+titlepage-text-color: "343434"
+logo: "md-stuff/f1-2018-fia.png"
+logo-width: 200
+toc: true
+toc-won-page: true
+toc-title: Table des matières 
 ---
+
+\pagebreak
 
 Rapport du projet : F1-of-Linux
 ===============================
@@ -24,1111 +45,333 @@ Notre groupe est constitué de 4 personnes :
 Introduction et présentation du projet
 --------------------------------------
 
-Ce projet consiste à présenter un week-end complet d'un grand prix de Formule 1
-, depuis les séances d'essais du vendredi jusqu'à la course du dimanche, en 
-passant par les essais du samedi et la séance de qualifications. 
+Ce projet consiste à présenter un week-end complet d'un grand prix de Formule 1, depuis les séances d'essais du vendredi jusqu'à la course du dimanche, en passant par les essais du samedi et la séance de qualifications.
 
-Notre but consiste à reproduire cela dans un langage de programmation 
-performant à l'exécution des méthodes implémentées, le langage C. 
-Nous devons générer un affichage qui gèrera les séances d'essais libres, les 
-qualifications ainsi que la course. 
-De plus, certaines informations doivent être disponible : temps au tour, temps 
-secteur, disqualification, arrêt aux stands, temps depuis le début de la 
-course.
+Notre but consiste à reproduire cela dans un langage de programmation performant à l'exécution des méthodes implémentées, le langage C.
+Nous devons générer un affichage qui gèrera les séances d'essais libres, les qualifications ainsi que la course.
+De plus, certaines informations doivent être disponible : temps au tour, temps secteur, disqualification, arrêt aux stands, temps depuis le début de la course.
 
-De plus, nous devons appliquer des concepts vus en cours en première année 
-ainsi qu'en deuxième année : processus père-fils (dont fork est la création 
-d'un nouveau processus utilisateur), sémaphores (pour gérer la synchronisation 
-de la mémoire ainsi que réduire l'accès aux routes partagées) et la mémoire 
-partagée (allocation et utilisation par appel des mémoires partagées via leurs 
-identificateurs).
+De plus, nous devons appliquer des concepts vus en cours en première année ainsi qu'en deuxième : processus père-fils (dont `fork` est la création d'un nouveau processus utilisateur), sémaphores (pour gérer la synchronisation des processus) et la mémoire partagée (allocation et utilisation par appel des mémoires partagées via leurs identificateurs).
 
 \pagebreak
 
 Cahier des charges
 ------------------
 
-Il y a 20 voitures engagées dans un grand prix. 
-Leurs numéros sont : 44, 77, 5, 7, 3, 33, 11, 31, 18, 35, 27, 55, 10, 28, 8
-, 20, 2, 14, 9, 16.
+Nous voulons organiser un grand prix contenant 20 voitures, à la manière de la Formule 1.
+Leurs numéros sont : 44, 77, 5, 7, 3, 33, 11, 31, 18, 35, 27, 55, 10, 28, 8, 20, 2, 14, 9, 16.
 
-Un circuit de F1 est divisé en 3 secteurs (S1, S2, S3). 
+Un circuit de F1 est divisé en 3 secteurs (S1, S2, S3).
 
-Le calendrier d’un week-end de F1 est établi comme suit : 
+Le calendrier d’un week-end de Formule 1 est établi de la manière suivante :
 
-- Vendredi matin, une séance d’essais libres de 1h30 (P1) 
+- Vendredi matin, une séance d’essais libres d'une durée de 1h30 (P1)
+- Vendredi après-midi, une deuxième séance d’essais libres d'une durée de 1h30 (P2)
+- Samedi matin, une troisième et dernière séance d’essais libres d'une durée de 1h (P3)
+- Samedi après-midi, une séance de qualifications est organisée et divisée en 3 parties :
+  - Q1, d'une durée 18 minutes et visant à éliminer les 5 dernières voitures qui occuperont les places 16 à 20 sur la grille de départ de la course en fonction de leur meilleur temps au tour,
+  - Q2, d'une durée 15 minutes, qui éliminera les 5 dernières voitures suivantes et qui occuperont les places 11 à 16 sur la grille de départ de la course en fonction de leur meilleur temps au tour,
+  - Q3, d'une durée 12 minutes et permettant de classer les 10 voitures restantes pour établir les 10 premières places sur la grille de départ de la course en fonction de leur meilleur temps au tour.
+- Dimanche après-midi, la course en elle-même visant à obtenir un podium ainsi qu'un classement général typique des courses de voitures.
 
-- Vendredi après-midi, une séance d’essais libres de 1h30 (P2) 
+Ce projet devra prendre en charge plusieurs particularités qui seront développées dans les points ci-dessous.
 
-- Samedi matin, une séance d’essais libres de 1h (P3) 
+### Première partie : gestion des séances d’essai, qualifications et course
 
-- Samedi après-midi, la séance de qualifications, divisé en 3 parties : 
+#### Lors des séances d’essais (P1, P2, P3) :
 
-- Q1, durée 18 minutes, qui élimine les 5 dernières voitures (qui occuperont 
-les places 16 à 20 sur la grille de départ de la course) 
+Il est nécessaire de relever les temps dans les différents secteurs (au nombre de 3) à chaque passage de chacune des voitures.
 
-- Q2, durée 15 minutes, qui élimine les 6 voitures suivantes (qui occuperont 
-les places 11 à 16 sur la grille de départ de la course) 
+De plus, dans l'affichage des séances d'essais, il est important de connaître le meilleur temps à chaque secteur ainsi que d'autres informations pertinentes comme si la voiture est au stand (PIT) ou si elle abandonne la séance (OUT).
+Malgré que les voitures soient au stand où ait abandonné la séance, on conserve toujours le meilleur temps de la voiture ainsi que son classement.
 
-- Q3, durée 12 minutes, qui permet de classer les 10 voitures restantes pour 
-établir les 10 premières places sur la grille de départ de la course 
+Pendant la séance d'essais, le classement des voitures se fait en fonction de leur tour complet le plus rapide.
+À la fin des séances d'essais, on conserve le classement final.
 
-- Dimanche après-midi, la course en elle-même. 
+#### Lors des qualifications (Q1, Q2, Q3) :
 
-Votre projet devra prendre en charge les choses suivantes. 
+Lors des qualifications,le temps des 3 secteurs à chaque passage pour chaque voiture est à relever.
 
-### Première partie : gestion des séances d’essai, qualifications et course 
+De plus, dans l'affichage des qualifications, il est important de connaître le meilleur temps à chaque secteur ainsi que d'autres informations pertinentes comme si la voiture est au stand (PIT) ou si elle abandonne la séance (OUT).
+Malgré que les voitures soient au stand où ait abandonné la séance, on conserve toujours le meilleur temps de la voiture ainsi que son classement.
 
-#### Lors des séances d’essais (P1, P2, P3) : 
+Le classement des voitures se fait en fonction de leur tour complet le plus rapide.
 
-- Relever les temps dans les 3 secteurs à chaque passage pour chaque voiture 
+La particularité avec les qualifications est un temps réduit et l'importance de conserver le classement de chacune des séances afin d'en définir l'ordre de départ de la course.
 
-- Toujours savoir qui a le meilleur temps dans chacun des secteurs 
+- À la fin de la première qualification, 15 voitures resteront qualifiées pour la 2ème séance et les 5 dernières sont placées à la fin de la grille de départ (places 16 à 20),
+- À la fin de la deuxième qualification, il reste 10 voitures qualifiées pour la 3ème séance et les 5 dernières sont placées dans les places 11 à 15 de la grille de départ,
+- Le classement de la troisième qualification attribue les places 1 à 10 de la grille de départ.
 
-- Classer les voitures en fonction de leur tour complet le plus rapide 
+#### Lors de la course :
 
-- Savoir si une voiture est aux stands (P) 
+L'affichage de la course présente le classement de l'ordre sur la grille de départ.
+Le classement doit toujours être maintenu durant la course, même s'il y a des dépassements.
+Il est important de savoir qui a le meilleur temps dans chacun des secteurs et également qui a le tour le plus rapide.
 
-- Savoir si une voiture est out (abandon de la séance) 
+Comme pour les essais libres et les qualifications, il est nécessaire de relever les temps dans les différents secteurs à chaque passage de chacune des voitures.
 
-- Dans ces 2 derniers cas, on conserve toujours le meilleur temps de la 
-voiture et celle-ci reste dans le classement 
+- Si une voiture est en abandon de course (out), elle sera classée en fin de classement.
+- Si la voiture est aux stands (PIT), le temps au stand est comptabilisé dans son temps et elle ressort à sa place dans la course.
+Par ailleurs, pour ce point, il y a généralement 2 ou 3 PIT par voiture par course.
 
-- Conserver le classement final à la fin de la séance
-
-#### Lors des qualifications (Q1, Q2, Q3) : 
-
-- Relever les temps dans les 3 secteurs à chaque passage pour chaque voiture 
-
-- Toujours savoir qui a le meilleur temps dans chacun des secteurs 
-
-- Classer les voitures en fonction de leur tour complet le plus rapide 
-
-- Savoir si une voiture est aux stands (P) 
-
-- Savoir si une voiture est out (abandon de la séance) 
-
-- Dans ces 2 derniers cas, on conserve toujours le meilleur temps de la 
-voiture et celle-ci reste dans le classement 
-
-- A la fin de Q1, il reste 15 voitures qualifiées pour Q2 et les 5 dernières 
-sont placées à la fin de la grille de départ (places 16 à 20) 
-
-- A la fin de Q2, il reste 10 voitures qualifiées pour Q3 et les 5 dernières 
-sont placées dans les places 11 à 15 de la grille de départ 
-
-- Le classement de Q3 attribue les places 1 à 10 de la grille de départ 
-
-- Conserver le classement final à la fin des 3 séances (ce sera l’ordre de 
-départ pour la course) 
-
-#### Lors de la course : 
-
-- Le premier classement est l’ordre sur la grille de départ 
-
-- Le classement doit toujours être maintenu tout au long de la course (gérer 
-les dépassements) 
-
-- Relever les temps dans les 3 secteurs à chaque passage pour chaque voiture 
-
-- Toujours savoir qui a le meilleur temps dans chacun des secteurs 
-
-- Toujours savoir qui a le tour le plus rapide 
-
-- Savoir si la voiture est out (abandon) ; dans ce cas, elle sera classée en 
-fin de classement 
-
-- Savoir si la voiture est aux stands (PIT), gérer le temps aux stands et 
-faire ressortir la voiture à sa place dans la course (généralement 2 ou 3 PIT 
-par voitures) 
-
-- Conserver le classement final et le tour le plus rapide 
+À la fin de la course, on conserve le classement final et le tour le plus rapide.
 
 **_Remarque :_ les stands se trouvent toujours dans le secteur 3.**
 
-De plus, il vous est demandé de paramétrer votre programme. 
+De plus, il est demandé de paramétrer le programme.
+En effet, les circuits peuvent être de longueur variable et le nombre de tours pour la course varie également (on essaie que le nombre total de kilomètres soit toujours plus ou moins le même pour chacune des courses du calendrier).
 
-En effet, les circuits peuvent être de longueur très variable et dès lors le 
-nombre de tours pour la course varie également (on essaie que le nombre total 
-de kilomètres soit toujours plus ou moins le même pour chacune des courses du 
-calendrier). 
+#### On vous demande de :
 
-#### On vous demande de : 
-
-- Réaliser le programme en C sous Linux 
-
-- Utiliser la mémoire partagée comme moyen de communication interprocessus 
-
-- Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée 
+- Réaliser le programme en C sous Linux;
+- Utiliser la mémoire partagée comme moyen de communication interprocessus;
+- Utiliser les sémaphores pour synchroniser l’accès à la mémoire partagée.
 
 \pagebreak
 
 Analyse du travail
 ------------------
 
-### Planning 
+Afin de reprendre au mieux ce projet, nous avons retenu les analyses faites avec la professeur suite au premier rendez-vous du 2 avril.
+Suite à ce meeting, nous avons décidé de commencer par décortiquer les demandes et en faire un tableau ainsi qu'un flowchart afin de mieux visualiser le projet :
 
+![Flowchart](md-stuff/hubert-flowchart.png)
 
-Lors de l'avancement du projet, nous avons travaillé minimum par deux. Nous 
-nous concertions afin de nous réunir (et le cas échéant, nous faisions de la 
-vidéoconférence).
+\pagebreak
 
-Afin de faciliter l'édition du projet, nous avons utilisé un système de 
-contrôle de versions, nous permettant d'effectuer des changements chacun de 
-notre coté (git). 
-Nous avons également créé un makefile afin de faciliter la compilation du 
-projet.
+Explication des particularités du code
+--------------------------------------
 
-Nous nous sommes réparti les tâches de la manière suivante :
+### Fonctionnalités du code
 
-- Melvin a mis au clair le cahier des charges afin que nous comprenions tous 
-un peu mieux les attentes pour ce projet,
+Le programme prend en tant qu'arguments le nom d'une étape du week-end de Formule 1 ainsi que la longueur d'un tour en kilomètres.
+Si ce dernier n'est pas fourni, une valeur par défaut est attribuée.
 
-- Dominik et Maxime ont implémenté une fonction permettant la génération du 
-random, utilisée dans la génération du temps des secteurs ainsi que pour 
-certaines probabilités,
+On lance la phase sélectionnée pour chacune des voitures participantes.
+Lors de la simulation, les voitures participantes vont générer des temps aléatoires à chaque secteur.
 
-- Hubert a pris en charge le côté programmation lorsque les autres membres du 
-groupe ne voyaient pas comment implémenter les demandes du cahier des charges,
+Un tableau de valeurs reprenant des informations diverses est ensuite affiché afin de pouvoir suivre l'évolution de l'étape choisie.
+Les informations représentée dans ce dernier dépendent de l'étape concernée.
+Ce tableau est également trié en fonction du meilleur temps de tour par pilote ou, dans le cadre de la course, trié en fonction de leur position.
 
-- Melvin et Dominik ont debug le projet lors du problème SIGSEGV.
+Au départ de la course, chaque participant démarre dans l'ordre précédemment déterminé par les séances de qualifications et avec une pénalité relative à leur position de départ.
+
+Lorsque la simulation d'une étape est terminée, les positions des pilotes est sauvegardée dans un fichier.
+Ce fichier sera chargé lors de l'étape suivante afin de déterminer les participants ainsi que leurs positions.
+
+### Mémoire partagée et communication entre processus
+
+On crée une zone de mémoire partagée puis on y attache un tableau de structure.
+
+```c
+SharedStruct *data;
+
+int struct_shm_id =
+    shmget(IPC_PRIVATE, sizeof(SharedStruct) *
+    options.participant_count, 0600 | IPC_CREAT);
+
+data = shmat(struct_shm_id, NULL, 0);
+```
+
+La mémoire partagée contient un tableau de structure comportant les informations de secteurs entre autres choses.
+
+```c
+typedef struct SharedStruct {
+    int id;
+    int s1;
+    int s2;
+    int s3;
+    int best_s1;
+    int best_s2;
+    int best_s3;
+    int best_lap_time;
+    int lap;
+    int sector;
+    int out;
+    int pit;
+    int done;
+} SharedStruct;
+```
+
+Dans notre cas, la mémoire partagée n'est accédée ou modifiée qu'avec un seul "écrivain" et un seul "lecteur" à la fois; il n'y aura jamais plus d'une écriture et lecture en même temps.
+Ici, chaque processus fils est un écrivain alors que le lecteur est le processus père.
+
+La sémaphore nous permettent de garantir l'accès exclusif à la mémoire partagée.
+Les opérations `sem_wait(sem_t *sem)` et `sem_post(sem_t *sem)` permettent respectivement de verrouiller et déverrouiller une sémaphore.
+
+### Libération des ressources de l'ordinateur
+
+Afin de libérer les ressources de l'ordinateur, plusieurs étapes sont réalisées une fois que les processus enfants ont terminé leur fonction et que le programme est prêt à quitter.
+
+Premièrement, il y a "destruction" de la sémaphore par le biais de l'opération `sem_destroy(sem_t *sem)`.
+
+Ensuite, on se détache des zones de mémoire partage et ensuite on les supprime.
+
+```c
+shmdt(data);
+shmctl(struct_shm_id, IPC_RMID, NULL);
+
+sem_destroy(sem);
+shmdt(sem);
+shmctl(sem_shm_id, IPC_RMID, NULL);
+```
+
+<!-- Pour ce faire, nous commençons par les détachements puis ensuite la suppression des id dans la mémoire partagée.
+Ensuite, on "détruit" le segment de mémoire partagée allouée tout comme les structures de données associées avec.
+Pour ce faire, nous utilisons l'opération `int shmdt(const void *shmaddr)` pour séparer la mémoire partagée puis `int shmctl(int shmid, IPC_RMID, NULL)` pour supprimer l'ID et détruire le segment de mémoire partagée. -->
 
 ### Création et gestion des processus
 
-Chaque voiture correspond à un processus fils, tandis que le père s'occupe 
-de la gestion des étapes et de l'affichage. 
+Chaque voiture correspond à un processus fils, tandis que le père s'occupe de la gestion des étapes et de l'affichage.
 
-### Intéraction entre les processus
+La création des processus se fait par le biais de la fonction `fork`, faisant partie des appels système POSIX.
+Elle permet de donner naissance à un nouveau processus qui est sa copie.
 
-Le processus père s'occupe de la gestion de la course, permettant de prévenir 
-les processus enfants quand il s'agit de passer à l'étape suivante. Il choisit 
-également qui est autorisé à passer à l'étape suivante en fonction de son classement. 
-De plus celui-ci gère l'affichage, en utilisant les infos fournies par les 
-processus voitures via une structure en mémoire partagée.
+Nos `fork` sont présent dans le fichier de code source `main.c`.
+
+### Rôle du processus père
+
+Dans notre cas, nous avons un processus père donnant naissance au nombre de processus fils nécessaire à l'étape choisie.
+Chaque processus fils représente une voiture.
+
+Le processus père, quant à lui, va lire des informations provenant de la mémoire partagée.
+Il s'occupe également de l'affichage ainsi que du tri tout comme la sauvegarde des informations sur fichier.
 
 \pagebreak
 
 Difficultés rencontrées et solutions
 ------------------------------------
 
+Concernant les difficultés rencontrées, suite à la reprise de ce projet pour la seconde session, il n'y a pas eu particulièrement de nouveaux problèmes rencontrés.
+
+Comme indiqué dans le point traitant la compréhension du cahier des charges, grâce à la communication avec la professeur ainsi que du travail réalisé par chacun des membres pour la prise de note, la création d'un flowchart et d'un tableau détaillé reprenant les informations importantes de façon claire et concise, nous avons su éviter la plupart des difficultés possiblement rencontrées.
+
 ### Compréhension du cahier des charges
 
-Au vu du cahier des charges reçu, nous avons eu des difficultés à comprendre 
-plus concrètement comment mettre en oeuvre certaines implémentations demandées.
-À force de recherche et également de quelques questions posées dans le cadre 
-du temps consacré spécifiquement au projet en cours, nous avons su comment 
-avancer dans le projet de façon plus claire et concise malgré l'impact non 
-négligeable sur la gestion du temps.
+Au vu du cahier des charges reçu, nous avons eu des difficultés à comprendre plus concrètement comment mettre en œuvre certaines implémentations demandées tant lors de la première session que lors de la seconde session.
+À force de recherche et également de questions posées dans le cadre du temps consacré spécifiquement au projet en cours lors de la première session, nous avons accumulé différentes notes nous permettant de mieux visualiser ce qui nous avait posé problème.
 
-### Random
+Deux rendez-vous ont été convenu avec la professeur (2 avril 2019 à 15h et 25 juin 2019 à 11h) afin de mieux visualiser les demandes, de comprendre ce qui n'avait pas été lors de la première session et également les détails qui n'avaient pas été correctement compris ou nous paraissant tout simplement trop flou.
 
-Lors de l'implémentation du random, nous avons rencontré des difficultés 
-concernant la génération de plusieurs valeurs différentes et dans un interval 
-précis.
-
-```C
-srand(getpid());
-```
-
-Nous avons réglé ce problème en seedant le PRNG _(Pseudo Random Number 
-Generator)_ avec le PID, étant unique pour chaque processus. 
-
-### Conversion du temps
-
-Nous avons également rencontré quelques problèmes lors de l'implémentation de 
-_"timeUnit"_.
-
-_"timeUnit"_ est une structure permettant de passer de millisecondes en toute 
-autre valeur de temps réel, et ce, dans les deux sens.
-
-En effet, nos conversions n'étaient pas correctement écrites au départ, 
-faisant en sorte que nos conversions ne nous rendaient des valeurs peu 
-probables et arrondies; la conversion entre millisecondes et toute autre valeur de temps réel n'étaient pas correctement implémentée.
-
-Après avoir reparcouru le code et avoir corrigé cela, la conversion fonctionne 
-correctement.
-
-### Sort
-
-Nous avions rencontré un problème de segmentation et de viol d'intégrité de 
-mémoire partagée suite à l'utilisation du malloc. 
-En effet, malloc était trop petit, impliquant de fait le problème rencontré 
-avec la mémoire partagée.
-
-### Synchronisation
-
-Nous avons rencontré un problème de synchronisation entre les sémaphores 
-utilisé dans le projet. 
-En effet, nous n'utilisions pas correctement les fonctions wait et signal des 
-sémaphores, impliquant par conséquent la nécessité de déboguer le projet 
-afin de détecter précisément les zones posant problème et de pouvoir les 
-corriger. 
-
-### Deadlock
-
-Le problème de deadlock rencontré provenait des processus fils, plus 
-précisément lors de la synchronisation de ces derniers. 
-En déboguant le projet, nous l'avons fixé. 
-
-### Allocation mémoire dynamique
-
-En utilisant une longueur variable pour le circuit, le nombre de tours varie 
-et il faut donc allouer les tableaux contenant la durée des différents secteurs
-de manière dynamique. 
-Par manque de temps, nous l'avons pas implémenté. 
+Suite à ces rendez-vous avec la professeur, le flowchart et le tableau détaillé contenant les informations importantes des demandes dans le cahier des charges fourni, cette difficultée à été résolue.
 
 \pagebreak
 
 Évolutions futures
 ------------------
 
-### Un meilleur affichage
+### Intégration de codes couleurs dans l'affichage
 
-L'affichage actuellement présent dans le projet n'est pas exactement celui 
-demandé d'après le cahier des charges. 
-Une réimplémentation de l'affichage pour contenir toutes les informations 
-demandées avec, éventuellement, un jeu de couleurs pourrait s'avérer 
-intéressante. 
+Il s'agit certes d'une implémentation de moindre importance, mais cela pourrait s'avérer pratique pour ressortir de manière plus rapide les informations les plus importantes.
+Par exemple, on pourrait réaliser un code couleur pour :
 
-Par exemple, nous pourrions implémenter un affichage ressemblant à ceci : 
+- Les 3 premières places dans le classement,
+- Le temps le plus rapide au tour,
+- La voiture ayant le temps le plus rapide au tour depuis le début de la course,
+- La ou les voiture(s) ayant abandonné la course (OUT).
 
-Afficher en Temps tour si P (P se trouve en S3) ou OUT (si abandon ou crash). 
-Dans le cas de OUT, la voiture est dernière du classement. 
+### Affichage cliquable
 
-Les codes d'affichage pour les tableaux sont : 
+Comme à la manière de `htop` dans Linux, la possibilité de cliquer sur un des en-têtes de colonne afin de trier automatiquement l'affichage en fonction de cette colonne pourrait s'avérer intéressante.
+En effet, si l'utilisateur souhaite prêter plus particulièrement son attention sur une catégorie d'information précise, cela pourrait lui être utile.
 
-| Code | S | P | OUT |
-|-------------|---------|---------------|---------|
-| Description | Secteur | Stand (= PIT) | Abandon |
+### Options lié à la pression d'une touche de clavier
 
-#### Pour les essais libres :
+Une autre idée d'implémentation est de proposer des options en fonction d'un bouton appuyé lorsque le programme est en cours de fonctionnement.
 
-_**Tri temps meilleur tour**_
+Imaginons par exemple les options suivantes :
 
-| Numéro de la voiture | S1 | S2 | S3 | Temps meilleur tour |
-|----------------------|----|----|----|---------------------|
-| 2 | 35 | 39 | 38 | 1min 52s |
-| 55 | 40 | 36 | 39 | 1min 55s |
-| 14 | 39 | 40 | 37 | 1min 56s |
-| 28 | 37 | 40 | 39 | 1min 56s |
+- <kbd>F1</kbd> : Help
+- <kbd>F2</kbd> : Mettre en pause / Reprendre
+- <kbd>F3</kbd> : Afficher / Retirer les codes couleurs
+- <kbd>F4</kbd> : Tri en fonction du meilleur temps au tour
+- <kbd>F5</kbd> : Tri en fonction du meilleur temps au tour total
+- <kbd>F10</kbd> : Quitter
 
-#### Pour les qualifications :
+### Phase d'essai entièrement libre
 
-_**Tri temps meilleur tour**_
+Par souci de facilité (et pour se concentrer sur d'autres parties nécessitant plus de temps et de travail), nous avons décidé que les voitures présentes lors d'une séance d'essai libre démarrent toutes comme s'il s'agissent d'une étape classique (une qualification ou une course).
 
-| Numéro de la voiture | S1 | S2 | S3 | Temps tour | Temps meilleur tour |
-|----------------------|----|----|----|------------|---------------------|
-| 14 | 39 | 40 | 37 | 1min 56s | 1min 32s |
-| 2 | 35 | 39 | 38 | 1min 52s | 1min 47s |
-| 55 | 40 | 36 | 39 | 1min 55s | 1min 55s |
-| 28 | 39 | 40 | 37 | 1min 56s | 1min 39s |
+Il serait possible, sans nécessairement y consacrer un temps considérable, de permettre aux différents pilotes de commencer et arrêter leurs séances d'essais libres lorsqu'ils le souhaitent voire même s'ils rouleront lors de la séance.
+La question concrète serait : _Est-ce que lors de la limite du temps imparti d'une séance d'essais libres, un pilote souhaite prendre le volant ou non et si oui, pour combien de tours ou combien de temps?_
 
-#### Pour la course :
-
-_**Tri position dans la course**_
-
-| Numéro de la voiture | S1 | S2 | S3 | Temps tour | Lap |
-|----------------------|----|----|----|------------|-----|
-| 2 | 35 | 39 | 38 | 1min 52s | 14 |
-| 55 | 40 | 36 | 39 | 1min 55s | 14 |
-| 14 | 39 | 40 | 37 | 1min 56s | 14 |
-| 28 | 39 | 40 | 37 | 1min 56s | 14 |
+Cela correspondrait bien plus à une course de Formule 1 en condition réelle.
 
 \pagebreak
 
 Conclusion
 ----------
 
-Ce projet nous a permis d'apprendre à programmer de façon plus assidue. Lors 
-de l'écriture d'une nouvelle méthode, nous testions systématiquement le projet 
-et en cas de problème, nous prenions le temps de relire le code et si 
-nécessaire, nous testions différentes méthodes (notamment le classique 
-_"print"_) pour déboguer notre méthode et avancer dans le projet. 
-Nous avons pu appliquer plusieurs concepts vu en cours théorique au courant du 
-quadrimestre et comprendre plus concrètement ce que ces concepts permettent de 
-faire (allocation d'une zone mémoire, appel d'une zone mémoire, sémaphores, 
-algorithmes, fork, etc.).
+L'avantage de ce projet est l'application de concepts multiples vue en cours théorique au courant du premier quadrimestre.
+Cela nous a permis de comprendre plus concrètement ce que ces concepts permettent de faire (allocation d'une zone mémoire, appel d'une zone mémoire, sémaphores, algorithmes, fork, etc.).
 
-Au début de ce projet, nous avions rencontré quelques difficultés de 
-compréhension par rapport au cahier des charges, ce qui nous a pris un peu de 
-temps au début et, par conséquent, un retard par rapport au planning que nous 
-avons pu rattraper en courant de quadrimestre. 
+Lors de la première session, ce projet nous avait permis d'apprendre à programmer de façon plus assidue.
+Lors de l'écriture d'une nouvelle méthode, nous testions systématiquement le projet et en cas de problème, nous prenions le temps de relire le code (et si nécessaire, nous testions différentes méthodes pour déboguer et avancer dans le projet).
+Nous avions rencontré plusieurs difficultés de compréhension par rapport au cahier des charges ainsi que d'autres difficultés rencontrées, nous avions accumulé un retard par rapport au planning que nous avions fixé au départ, mais l'avions rattrapé en courant de quadrimestre.
+Malheureusement, la programmation présentée ne correspondant et ne remplissant pas toutes les demandes, cela nous a entraînés dans une seconde tentative pour ce projet.
+
+En cette seconde session, nous avons changé de méthodologie et avons porté une importance quasi capitale sur le fait de réaliser les tests de méthodes.
+Nous avons appris de nos erreurs et avons eu des moments constructifs d'échange avec la professeur afin de réussir au mieux ce projet.
+Nous avons également découvert l'utilité de l'utilisation de quelques librairies, ainsi que d'une documentation disponible en ligne, nous permettant de mieux comprendre certaines implémentations nécessaires.
 
 \pagebreak
 
 Exemplaire du code
 ------------------
 
-### src/main.c
+### child.c
 
-```C
-#include "car.h"
-#include "carstruct.h"
-#include "display.h"
-#include "options.h"
-#include "sharedstruct.h"
-#include "util.h"
-#include <semaphore.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
+\lstinputlisting[language=c]{../src/child.c}
 
-int main() {
-    char *CAR_NAMES[NUMBER_OF_CARS] = {"44", "77", "5",  "7",  "3", "33", "11", "31", "18", "35",
-                                       "27", "55", "10", "28", "8", "20", "2",  "14", "9",  "16"};
+### child.h
 
-    pid_t pid = 0;
-    int car_index = 0;
+\lstinputlisting[language=c]{../src/child.h}
 
-    size_t shared_struct_size = sizeof(SharedStruct);
-    SharedStruct *shared_struct = (SharedStruct *)create_shared_memory(shared_struct_size);
+### curses.c
 
-    sem_t *sem = init_shared_sem(0);
+\lstinputlisting[language=c]{../src/curses.c}
 
-    shared_struct->sem = sem;
-    shared_struct->step = -1;
+### curses.h
 
-    for (int i = 0; i < NUMBER_OF_CARS; i++) {
-        shared_struct->car_structs[i].name = CAR_NAMES[i];
+\lstinputlisting[language=c]{../src/curses.h}
 
-        for (int j = 0; j < 7; ++j) {
-            RaceStep race_step = {.lap = 0, .stand = 0, .out = 0, .done = 0, .allowed = 0};
-            shared_struct->car_structs[i].race_steps[j] = race_step;
-        }
-    }
+### display.c
 
-    for (int i = 0; i < NUMBER_OF_CARS; i++) {
-        car_index = i;
-        pid = fork();
-        if (pid == 0)
-            break;
-    }
+\lstinputlisting[language=c]{../src/display.c}
 
-    if (pid < 0) {
-        fprintf(stderr, "An error occurred while forking: %d\n", pid);
-        exit(1);
-    } else if (pid == 0) {
-        car(shared_struct, car_index);
-        exit(0);
-    } else {
-        display(shared_struct);
-        for (int i = 0; i < NUMBER_OF_CARS; ++i)
-            wait(NULL);
-        munmap(shared_struct, shared_struct_size);
-        munmap(sem, sizeof(sem_t));
-        exit(0);
-    }
-}
-```
+### display.h
 
-### src/display.c
+\lstinputlisting[language=c]{../src/display.h}
 
-```C
-#include "display.h"
-#include "options.h"
-#include "step.h"
-#include "timeunit.h"
-#include "util.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+### main.c
 
-// contains index of qualified cars
-int qualified[NUMBER_OF_CARS];
-int number_of_cars_allowed;
+\lstinputlisting[language=c]{../src/main.c}
 
-int current_step;
-char step_name[5];
+### random.c
 
-// function called from the main method as the parent process
-void display(SharedStruct *shared_struct) {
-    init_step(shared_struct, P1);
-    display_step(shared_struct, P1);
+\lstinputlisting[language=c]{../src/random.c}
 
-    init_step(shared_struct, P2);
-    display_step(shared_struct, P2);
+### random.h
 
-    init_step(shared_struct, P3);
-    display_step(shared_struct, P3);
+\lstinputlisting[language=c]{../src/random.h}
 
-    init_step(shared_struct, Q1);
-    display_step(shared_struct, Q1);
+### struct.h
 
-    init_step(shared_struct, Q2);
-    display_step(shared_struct, Q2);
+\lstinputlisting[language=c]{../src/struct.h}
 
-    init_step(shared_struct, Q3);
-    display_step(shared_struct, Q3);
+### time.c
 
-    init_step(shared_struct, RACE);
-    display_step(shared_struct, RACE);
-}
+\lstinputlisting[language=c]{../src/time.c}
 
-// set the current step name, allow the cars for the next step depending on their positions
-// and the signal them with a semaphore
-void init_step(SharedStruct *shared_struct, int step) {
-    current_step = step;
+### time.h
 
-    // they're all qualified for P1
-    if (step == P1) {
-        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-            qualified[i] = i;
-        }
-    }
+\lstinputlisting[language=c]{../src/time.h}
 
-    if (step == P1)
-        strcpy(step_name, "P1");
-    else if (step == P2)
-        strcpy(step_name, "P2");
-    else if (step == P3)
-        strcpy(step_name, "P3");
-    else if (step == Q1)
-        strcpy(step_name, "Q1");
-    else if (step == Q2)
-        strcpy(step_name, "Q2");
-    else if (step == Q3)
-        strcpy(step_name, "Q3");
-    else if (step == RACE)
-        strcpy(step_name, "race");
+### var.c
 
-    if (step == Q2)
-        number_of_cars_allowed = 15;
-    else if (step == Q3 || step == RACE)
-        number_of_cars_allowed = 10;
-    else
-        number_of_cars_allowed = 20;
+\lstinputlisting[language=c]{../src/var.c}
 
-    char *names[number_of_cars_allowed];
+### var.h
 
-    for (int i = 0; i < number_of_cars_allowed; ++i) {
-        int car_index = qualified[i];
-        names[i] = shared_struct->car_structs[car_index].name;
-        shared_struct->car_structs[car_index].race_steps[step].allowed = 1;
-    }
-
-    printf("\n\nThe followings cars are qualified for the coming step:\n");
-    print_car_names(names, number_of_cars_allowed);
-    printf("\n");
-
-    sleep(1);
-
-    shared_struct->step = step;
-
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        sem_post(shared_struct->sem);
-    }
-}
-
-// function used to display a step
-void display_step(SharedStruct *shared_struct, int step_index) {
-    printf("Starting %s---------------------------\n\n", step_name);
-
-    while (!done(shared_struct->car_structs)) {
-
-        sleep(1);
-
-        struct e sorted[NUMBER_OF_CARS];
-        if (current_step == RACE) {
-            sort_car_by_lap(sorted, shared_struct->car_structs, current_step);
-        } else {
-            sort_car_by_time(sorted, shared_struct->car_structs, current_step);
-        }
-
-        if (current_step == RACE) {
-            printf("\nname out current lap\n");
-            printf("---- --- -----------\n");
-        } else {
-            printf("\nname out current lap best lap time\n");
-            printf("---- --- ----------- ------------\n");
-        }
-
-        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-            Car *car = &shared_struct->car_structs[sorted[i].car_index];
-            RaceStep *race_step = &car->race_steps[step_index];
-            if (!race_step->allowed)
-                continue;
-
-            char time[25];
-            to_string(sorted[i].value, time);
-
-            char out[4];
-            if (race_step->out)
-                strcpy(out, "yes");
-            else
-                strcpy(out, "no");
-
-            if (current_step == RACE) {
-                printf("%2s   %-3s %-2d\n", car->name, out, race_step->lap);
-            } else {
-                printf("%2s   %-3s %-2d          %s\n", car->name, out, race_step->lap, time);
-            }
-        }
-    }
-
-    printf("%s done------------------------------\n\n", step_name);
-    printf("Summary\n");
-
-    struct e sorted[NUMBER_OF_CARS];
-    if (current_step == RACE) {
-        sort_car_by_lap(sorted, shared_struct->car_structs, current_step);
-    } else {
-        sort_car_by_time(sorted, shared_struct->car_structs, current_step);
-    }
-
-    if (current_step == RACE) {
-        printf("\nname out current lap\n");
-        printf("---- --- -----------\n");
-    } else {
-        printf("\nname out current lap best lap time\n");
-        printf("---- --- ----------- ------------\n");
-    }
-
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        Car *car = &shared_struct->car_structs[sorted[i].car_index];
-        RaceStep *race_step = &car->race_steps[step_index];
-        if (!race_step->allowed)
-            continue;
-
-        char time[25];
-        to_string(sorted[i].value, time);
-
-        char out[4];
-        if (race_step->out)
-            strcpy(out, "yes");
-        else
-            strcpy(out, "no");
-
-        if (current_step == RACE) {
-            printf("%2s   %-3s %-2d\n", car->name, out, race_step->lap);
-        } else {
-            printf("%2s   %-3s %-2d          %s\n", car->name, out, race_step->lap, time);
-        }
-    }
-
-    if (current_step == RACE) {
-
-        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-            Car *car = &shared_struct->car_structs[sorted[i].car_index];
-            RaceStep *race_step = &car->race_steps[step_index];
-
-            if (!race_step->allowed || race_step->out)
-                continue;
-            printf("\n\nThe winner of the race is %s !!!\n", car->name);
-            break;
-        }
-
-    } else {
-        sleep(2);
-    }
-}
-
-// function returning 1 if the current step is done
-int done(Car *cars) {
-    int count = 0;
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        Car *car = &cars[i];
-        if (!car->race_steps[current_step].allowed)
-            continue;
-        if (!car->race_steps[current_step].done)
-            ++count;
-    }
-    return count == 0;
-}
-```
-
-### src/car.c
-
-```C
-#include "car.h"
-#include "random.h"
-#include "step.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-
-//#define DEBUG
-
-#ifdef DEBUG
-#define DIVIDER 100000
-#endif // DEBUG
-
-#ifndef DEBUG
-#define DIVIDER 1000
-#endif // DEBUG
-
-// the average time of a sector
-int average_time;
-
-int variance;
-
-// function to sleep during x ms
-void sleep_ms(int ms) {
-    struct timespec sleep_time = {.tv_sec = 0, .tv_nsec = ms * 1000000};
-    nanosleep(&sleep_time, NULL);
-}
-
-// function called after the fork, once for each car
-void car(SharedStruct *shared_struct, int index) {
-    init_rand((unsigned int)getpid());
-
-    average_time = 40000;
-    variance = average_time * 10 / 100;
-
-    step(shared_struct, index, P1, minutes(90), 0);
-    step(shared_struct, index, P2, minutes(90), 0);
-    step(shared_struct, index, P3, minutes(60), 0);
-
-    step(shared_struct, index, Q1, minutes(18), 0);
-    step(shared_struct, index, Q2, minutes(15), 0);
-    step(shared_struct, index, Q3, minutes(12), 0);
-
-    // TODO
-    int lap_number = 15;
-    step(shared_struct, index, RACE, minutes(90), lap_number);
-    exit(0);
-}
-
-// function used to generate random times and sleep depending on the value
-// the values are also assigned inside the race_step struct
-void generate_lap(RaceStep *race_step, int lap) {
-    race_step->stand = 0;
-    for (int i = 0; i < 3; ++i) {
-        int rand = bounded_rand(average_time - variance, average_time + variance);
-        sleep_ms(rand / DIVIDER);
-
-        if (i == 2 && proba(1, 100)) {
-            int time_at_stand = bounded_rand(19000, 21000);
-            sleep_ms(time_at_stand / DIVIDER);
-            rand += time_at_stand;
-            race_step->stand = 1;
-        }
-
-        if (lap != 0 && proba(1, 600)) {
-            race_step->out = 1;
-            break;
-        }
-
-        race_step->time[lap][i] = rand;
-    }
-}
-
-// function called once for each step of the formula 1 weekend
-void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number) {
-    while (shared_struct->step != step_index) {
-    }
-
-    sem_wait(shared_struct->sem);
-
-    Car *car = &shared_struct->car_structs[car_index];
-    RaceStep *race_step = &car->race_steps[step_index];
-
-    if (!race_step->allowed) {
-        race_step->done = 1;
-        return;
-    }
-
-    int total_time = to_ms(min);
-
-    int current_time = 0;
-    int lap = 0;
-
-    while (1) {
-        generate_lap(race_step, lap);
-
-        if (race_step->out)
-            break;
-
-        int sum = 0;
-        sum += race_step->time[lap][0];
-        sum += race_step->time[lap][1];
-        sum += race_step->time[lap][2];
-
-        if ((step_index != RACE && current_time + sum > total_time) || (step_index == RACE && lap == lap_number)) {
-            break;
-        } else {
-            current_time += sum;
-            race_step->lap = lap++;
-        }
-    }
-
-    race_step->done = 1;
-}
-```
-
-### src/random.c
-
-```C
-#include "random.h"
-#include <stdlib.h>
-#include <time.h>
-
-void init_rand(unsigned seed) { srand(seed); }
-
-/* example:
- * proba(2, 100) returns true 2% of the time;
- */
-int proba(int n, int m) { return (rand() % m) < n; }
-
-// min included, max excluded
-int bounded_rand(int min, int max) { return rand() % (max + 2 - min) + min; }
-```
-
-
-### src/timeunit.c
-
-```C
-#include "timeunit.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-TimeUnit to_time_unit(int ms) {
-    struct TimeUnit timeUnit;
-    div_t output;
-
-    output = div(ms, 60000);
-    timeUnit.m = output.quot;
-    ms = output.rem;
-
-    output = div(ms, 1000);
-    timeUnit.s = output.quot;
-    ms = output.rem;
-
-    timeUnit.ms = ms;
-
-    return timeUnit;
-}
-
-TimeUnit minutes(int minutes) { return (TimeUnit){.m = minutes, .s = 0, .ms = 0}; }
-
-int to_ms(TimeUnit timeUnit) {
-    int ms = 0;
-    ms += timeUnit.ms;
-    ms += timeUnit.s * 1000;
-    ms += timeUnit.m * 60 * 1000;
-    return ms;
-}
-
-void to_string(int ms, char *str) {
-    struct TimeUnit time = to_time_unit(ms);
-    sprintf(str, "%d:%d'%d", time.m, time.s, time.ms);
-}
-```
-
-### src/util.c
-
-```C
-#include "util.h"
-#include "options.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
-// print car names assuming a name length is at max 2
-void print_car_names(char **names, int length) {
-    int size = 4 * length;
-    char str[size];
-    strcpy(str, "");
-    for (int i = 0; i < length; ++i) {
-        strcat(str, names[i]);
-        if (i != length - 1)
-            strcat(str, ", ");
-    }
-    printf("%s\n", str);
-}
-
-int comp(const void *a, const void *b) {
-    int first = ((struct e *)a)->value;
-    int second = ((struct e *)b)->value;
-
-    if (first == second)
-        return 0;
-    else if (first == -1)
-        return -1;
-    else if (second == -1)
-        return 1;
-    else
-        return first - second;
-}
-
-void sort_car_by_time(struct e *result, Car *car, int step) {
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        Car *c = &car[i];
-        RaceStep *race_step = &c->race_steps[step];
-        if (!race_step->allowed) {
-            result[i] = (struct e){.car_index = i, .value = -1};
-            continue;
-        }
-
-        int lap_count = race_step->lap;
-        int laps[lap_count];
-
-        for (int j = 0; j < lap_count; ++j) {
-            laps[j] = race_step->time[lap_count][0];
-            laps[j] += race_step->time[lap_count][1];
-            laps[j] += race_step->time[lap_count][2];
-        }
-
-        result[i] = (struct e){.car_index = i, .value = min_from_array(laps, lap_count)};
-    }
-
-    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
-}
-
-void sort_car_by_lap(struct e *result, Car *car, int step) {
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        Car *c = &car[i];
-        RaceStep *race_step = &c->race_steps[step];
-        if (!race_step->allowed) {
-            result[i] = (struct e){.car_index = i, .value = -1};
-            continue;
-        }
-
-        int lap_count = race_step->lap;
-
-        result[i] = (struct e){.car_index = i, .value = lap_count};
-    }
-
-    qsort(result, NUMBER_OF_CARS, sizeof(struct e), comp);
-}
-
-int min_from_array(const int *array, int size) {
-    int min_value = -1;
-    for (int i = 0; i < size; ++i) {
-        if (array[i] < min_value || min_value == -1) {
-            min_value = array[i];
-        }
-    }
-    return min_value;
-}
-
-// utility function returning a pointer from shared memory
-void *create_shared_memory(size_t size) {
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_ANONYMOUS | MAP_SHARED;
-    void *ptr = mmap(NULL, size, prot, flags, 0, 0);
-    if (ptr == MAP_FAILED) {
-        fprintf(stderr, "Error mmap\n");
-        exit(1);
-    }
-    return ptr;
-}
-
-// utility function returning a pointer to a semaphore in shared memory
-sem_t *init_shared_sem(unsigned int init_value) {
-    sem_t *sem = (sem_t *)create_shared_memory(sizeof(sem_t));
-    sem_init(sem, 1, init_value);
-    return sem;
-}
-```
-
-### src/car.h
-
-```C
-#ifndef CAR_H
-#define CAR_H
-
-#include "carstruct.h"
-#include "timeunit.h"
-#include "sharedstruct.h"
-
-
-void car(SharedStruct *shared_struct, int index);
-
-void step(SharedStruct *shared_struct, int car_index, int step_index, TimeUnit min, int lap_number);
-
-#endif //CAR_H
-```
-
-### src/carstruct.h
-
-```C
-#ifndef CARSTRUCT_H
-#define CARSTRUCT_H
-
-#include "racestep.h"
-
-// struct containing a car name and a race step struct for each step
-typedef struct Car {
-    char *name;
-
-    RaceStep race_steps[7];
-} Car;
-
-#endif //CARSTRUCT_H
-```
-
-
-### src/display.h
-```C
-#ifndef DISPLAY_H
-#define DISPLAY_H
-
-#include <semaphore.h>
-#include "carstruct.h"
-#include "sharedstruct.h"
-
-void display(SharedStruct *shared_struct);
-
-void init_step(SharedStruct *shared_struct, int step);
-
-void display_step(SharedStruct *shared_struct, int step_index);
-
-int done(Car *cars);
-
-#endif //DISPLAY_H
-```
-
-### src/options.h
-
-```C
-#ifndef OPTIONS_H
-#define OPTIONS_H
-
-#define NUMBER_OF_CARS 20
-
-#endif //OPTIONS_H
-```
-
-### src/racestep.h
-
-```C
-#ifndef RACESTEP_H
-#define RACESTEP_H
-
-// struct containing informations about a formula 1 step
-typedef struct RaceStep {
-    int allowed;
-
-    int lap;
-
-    int stand;
-    int out;
-
-    int time[48][3];
-
-    int done;
-} RaceStep;
-
-
-#endif //RACESTEP_H
-```
-
-### src/random.h
-
-```C
-#ifndef RANDOM_H
-#define RANDOM_H
-
-void init_rand(unsigned seed);
-
-int proba(int n, int m);
-
-int bounded_rand(int min, int max);
-
-#endif //RANDOM_H
-```
-
-### src/sharedstruct.h
-
-```C
-#ifndef STRUCT_H
-#define STRUCT_H
-
-#include "carstruct.h"
-#include "options.h"
-#include <semaphore.h>
-
-// struct containing all the informations shared beetween cars and the main process
-typedef struct SharedStruct{
-    Car car_structs[NUMBER_OF_CARS];
-
-    sem_t *sem;
-
-    int step;
-} SharedStruct;
-
-#endif //STRUCT_H
-```
-
-### src/step.h
-
-```C
-#ifndef STEP_H
-#define STEP_H
-
-#define P1 0
-#define P2 1
-#define P3 2
-
-#define Q1 3
-#define Q2 4
-#define Q3 5
-
-#define RACE 6
-
-#endif //STEP_H
-```
-
-### src/timeunit.h
-
-```C
-#ifndef TIMEUNIT_H
-#define TIMEUNIT_H
-
-typedef struct TimeUnit {
-    int m;
-    int s;
-    int ms;
-} TimeUnit;
-
-TimeUnit to_time_unit(int ms);
-
-TimeUnit minutes(int minutes);
-
-int to_ms(TimeUnit timeUnit);
-
-void to_string(int ms, char *str);
-
-
-#endif //TIMEUNIT_H
-```
-
-### src/util.h
-
-```C
-#ifndef UTIL_H
-#define UTIL_H
-
-#include "carstruct.h"
-#include <sys/types.h>
-#include <semaphore.h>
-
-// TODO rename
-struct e {
-    int car_index;
-    int value;
-};
-
-void print_car_names(char **names, int length);
-
-int number_of_car_allowed(Car *cars, int step);
-
-void sort_car_by_time(struct e *result, Car *car, int step);
-
-void sort_car_by_lap(struct e *result, Car *car, int step);
-
-int min_from_array(const int *array, int size);
-
-void *create_shared_memory(size_t size);
-
-sem_t *init_shared_sem(unsigned int init_value);
-
-#endif //UTIL_H
-```
+\lstinputlisting[language=c]{../src/var.h}
