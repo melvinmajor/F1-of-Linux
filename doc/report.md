@@ -21,7 +21,7 @@ titlepage: true
 titlepage-rule-height: 6
 titlepage-rule-color: "ef4524"
 titlepage-text-color: "343434"
-logo: "md-stuff/f1-2018-fia.png"
+logo: "imgs/logo.png"
 logo-width: 200
 toc: true
 toc-won-page: true
@@ -33,7 +33,7 @@ toc-title: Table des matières
 Rapport du projet : F1-of-Linux
 ===============================
 
-**Groupe *7***
+**Groupe 7**
 
 Notre groupe est constitué de 4 personnes :
 
@@ -136,7 +136,7 @@ Analyse du travail
 Afin de reprendre au mieux ce projet, nous avons retenu les analyses faites avec la professeur suite au premier rendez-vous du 2 avril.
 Suite à ce meeting, nous avons décidé de commencer par décortiquer les demandes et en faire un tableau ainsi qu'un flowchart afin de mieux visualiser le projet :
 
-![Flowchart](md-stuff/hubert-flowchart.png)
+![Flowchart](imgs/flowchart.png)
 
 \pagebreak
 
