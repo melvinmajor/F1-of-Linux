@@ -12,7 +12,7 @@ $(EXE):	$(SRC)
 	$(CC) $(SRC) \
 	    $(LIBS) \
 	    $(CFLAGS) \
-	    -o $(EXE)
+	    -o $@
 
 run:
 	./$(EXE)
