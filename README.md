@@ -1,6 +1,6 @@
-># F1-of-Linux
->
->1st project of the academic year for the lesson of OS 2nd Bachelor at EPHEC Louvain-la-Neuve
+# F1-of-Linux
+
+Projet visant à simuler un weekend de Courses Formule 1 dans le cadre de la programmation système en C
 
 ## Langage de programmation et licence
 
@@ -21,22 +21,20 @@ C
 
 ## Comment compiler ce projet
 
-### Sur Linux
-
-COMING SOON
+`make`
 
 ## Tâches à faire
 
 - [x] Création du GitHub
-- [ ] Création d'un randomizer pour générer un temps
-- [ ] Création d'un affichage temporaire pour tester des parties du code
-- [ ] Réutilisation du randomizer pour la gestion des secteurs, tours et des crashs
-- [ ] Création de l'affichage final
-- [ ] Triage de l'affichage
-- [ ] Création des forks et attribuer à chaque véhicule une structure par défaut
-- [ ] Gestion de la compétition en 3 parties au niveau des séances d'essais libres
-- [ ] Gestion de la compétition en 3 parties au niveau des qualifications
-- [ ] Gestion de la compétition lors de la course, du grand prix
+- [x] Création d'un randomizer pour générer un temps
+- [x] Création d'un affichage temporaire pour tester des parties du code
+- [x] Réutilisation du randomizer pour la gestion des secteurs, tours et des crashs
+- [x] Création de l'affichage final
+- [x] Triage de l'affichage
+- [x] Création des forks et attribuer à chaque véhicule une structure par défaut
+- [x] Gestion de la compétition en 3 parties au niveau des séances d'essais libres
+- [x] Gestion de la compétition en 3 parties au niveau des qualifications
+- [x] Gestion de la compétition lors de la course, du grand prix
 
 ## Cahier des charges du projet
 
