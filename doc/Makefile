@@ -7,12 +7,12 @@ REPORT_IN=report.md
 REPORT_OUT=report.pdf
 CODE_MD=code.md
 
-.PHONY: compile run format watch clean report
+.PHONY: report
+
+report: $(REPORT_OUT)
 
 eisvogel.tex:
 	wget -O $@ 'https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex' 
-
-report: $(REPORT_OUT)
 
 $(REPORT_OUT): $(REPORT_IN) eisvogel.tex $(CODE_MD)
 	pandoc -f markdown --template eisvogel.tex \
@@ -20,4 +20,4 @@ $(REPORT_OUT): $(REPORT_IN) eisvogel.tex $(CODE_MD)
 	    $(REPORT_IN) $(CODE_MD)
 
 $(CODE_MD): $(SRC_SORTED)
-	./gencode-md.sh $(SRC_SORTED) > $(CODE_MD)
+	./gencode-md.sh $^ > $@
