@@ -1,6 +1,6 @@
 #!/bin/sh
 
-printf '%s\n\n' '## Examplaire du code'
+printf '%s\n\n' '## Exemplaire du code'
 
 for file in "$@"; do
     title=$(basename $file)
