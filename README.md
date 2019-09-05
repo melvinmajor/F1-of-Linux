@@ -2,6 +2,8 @@
 
 Projet visant à simuler un weekend de Courses Formule 1 dans le cadre de la programmation système en C
 
+![App UI - RACE](doc/imgs/app-ui.png)
+
 ## Langage de programmation et licence
 
 C
@@ -22,6 +24,17 @@ C
 ## Comment compiler ce projet
 
 `make`
+
+## Comment utiliser ce projet
+
+`./f1` suivi de l'argument _obligatoire_  `--step` pour définir l'étape que vous souhaitez réaliser :
+
+- P1/P2/P3 : pour les essais libres,
+- Q1/Q2/Q3 : pour les qualifications (ils sont nécessaire pour l'étape suivante),
+- RACE : pour la course.
+
+L'argument _facultatif_ `--length` suivi d'un chiffre peut être utilisé pour définir une longueur spécifique, en kilomètres, d'un tour de piste.
+Par défaut, elle est reglée à 7 kilomètres.
 
 ## Tâches à faire
 

@@ -1,0 +1,17 @@
+# Git ignore of F1-of-Linux Project
+# See repository at https://github.com/melvinmajor/F1-of-Linux
+# ============================================================
+
+# Ranking of each step
+P1
+P2
+P3
+Q1
+Q2
+Q3
+RACE
+
+# Other stuff
+code.md
+eisvogel.tex
+
