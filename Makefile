@@ -4,7 +4,7 @@ LIBS=$(wildcard lib/*.c)
 CFLAGS=-Wall -Wextra -lpthread -lrt -std=gnu99 -lncurses
 EXE=f1
 
-.PHONY: compile run format watch clean
+.PHONY: compile format watch clean
 
 compile: $(EXE)
 
@@ -13,9 +13,6 @@ $(EXE):	$(SRC)
 	    $(LIBS) \
 	    $(CFLAGS) \
 	    -o $@
-
-run:
-	./$(EXE)
 
 format:
 	clang-format -i $(SRC)
